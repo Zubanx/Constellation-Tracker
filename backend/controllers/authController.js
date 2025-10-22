@@ -35,7 +35,7 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  if (!email || !password) {
+  if (!username || !password) {
     return res.status(400).json({
       status: 'failed',
       message: 'Please provide a valid username and password',
@@ -43,8 +43,10 @@ exports.login = async (req, res, next) => {
   }
   try {
     const user = await User.findOne({ username }).select('+password');
+    console.log(user)
+    console.log(req.body)
 
-    if (!user || !user.correctPassword(password, user.password)) {
+    if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
         status: 'failed',
         message: 'Incorrect email or password',
