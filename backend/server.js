@@ -1,20 +1,30 @@
-require('dotenv').config()
+require('dotenv').config();
+const app = require('./app');
 
 const express = require('express');
-const app = express();
+
 const mongoose = require('mongoose');
 
-const dbUrl = process.env.dbURL;
+const DB_URL = process.env.DB_URL;
 
-mongoose.connect(dbUrl);
-const db = mongoose.connection
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to Database'));
+async function connectDB() {
+  try {
+    if (!DB_URL) {
+      console.error('DB_URL environment variable is not defined');
+      process.exit(1);
+    }
+    await mongoose.connect(DB_URL, { dbName: 'mernAuthDB' });
+    console.log('Connected to Database');
+  } catch (error) {
+    console.error('Database connection error:', error);
+    process.exit(1);
+  }
+}
 
-app.use(express.json());
+connectDB();
 
-const constellationRouter = require('./routes/constellations')
-app.use('/constellations', constellationRouter)
-
+mongoose.connection.on('error', (error) => {
+  console.error('MongoDB error:', error);
+});
 
 app.listen(3000, () => console.log('Server has Started'));
