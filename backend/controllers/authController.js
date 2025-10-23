@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -43,8 +44,8 @@ exports.login = async (req, res, next) => {
   }
   try {
     const user = await User.findOne({ username }).select('+password');
-    console.log(user)
-    console.log(req.body)
+    console.log(user);
+    console.log(req.body);
 
     if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
@@ -65,4 +66,46 @@ exports.login = async (req, res, next) => {
       error,
     });
   }
+};
+
+exports.protect = async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  if (!token) {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'You are not logged in',
+    });
+  }
+  try {
+    const decoded = await promisify(jwt.verify(token, process.env.JWT_SECRET));
+
+    //check if user was deleted after the JWT token was created
+    const freshUser = await User.findById(decoded.id);
+    if (!freshUser) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'The user belonging to this token no longer exist',
+      });
+    }
+    //check if user changed passwords after the JWT token was created
+    if (freshUser.changedPasswordAfter(decoded.iat)) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'User recently changed password! Please log in again',
+      });
+    }
+  } catch (error) {
+    res.status(401).json({
+      message: 'failed',
+      error,
+    });
+  }
+  req.user = freshUser;
+  next();
 };
