@@ -27,7 +27,7 @@ exports.signup = async (req, res, next) => {
     });
   } catch (error) {
     res.status(401).json({
-      message: 'failed',
+      status: 'failed',
       error,
     });
   }
@@ -44,8 +44,6 @@ exports.login = async (req, res, next) => {
   }
   try {
     const user = await User.findOne({ username }).select('+password');
-    console.log(user);
-    console.log(req.body);
 
     if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
@@ -70,6 +68,7 @@ exports.login = async (req, res, next) => {
 
 exports.protect = async (req, res, next) => {
   let token;
+  let freshUser;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -83,10 +82,11 @@ exports.protect = async (req, res, next) => {
     });
   }
   try {
-    const decoded = await promisify(jwt.verify(token, process.env.JWT_SECRET));
-
+    
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     //check if user was deleted after the JWT token was created
-    const freshUser = await User.findById(decoded.id);
+    freshUser = await User.findById(decoded.id);
+    
     if (!freshUser) {
       return res.status(401).json({
         status: 'failed',
@@ -101,8 +101,9 @@ exports.protect = async (req, res, next) => {
       });
     }
   } catch (error) {
-    res.status(401).json({
-      message: 'failed',
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Failed on the  catch',
       error,
     });
   }

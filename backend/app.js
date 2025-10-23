@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const protected = require('./controllers/authController').protect
 
 const constellationRouter = require('./routes/constellationRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -11,6 +12,6 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 app.use('/constellations', constellationRouter);
-app.use('/user', userRouter);
+app.use('/user',userRouter);
 
 module.exports = app;
