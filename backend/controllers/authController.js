@@ -9,6 +9,28 @@ const signToken = (id) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
+
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
 exports.signup = async (req, res, next) => {
   try {
     const newUser = await User.create({
@@ -18,15 +40,7 @@ exports.signup = async (req, res, next) => {
       passwordConfirm: req.body.passwordConfirm,
     });
 
-    token = signToken(newUser._id);
-
-    res.status(201).json({
-      status: 'success',
-      token,
-      data: {
-        user: newUser,
-      },
-    });
+    createSendToken(newUser, 201, res);
   } catch (error) {
     res.status(401).json({
       status: 'failed',
@@ -50,16 +64,11 @@ exports.login = async (req, res, next) => {
     if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
         status: 'failed',
-        message: 'Incorrect email or password',
+        message: 'Incorrect username or password',
       });
     }
 
-    const token = signToken(user._id);
-
-    res.status(200).json({
-      status: 'success',
-      token,
-    });
+    createSendToken(user, 200, res);
   } catch (error) {
     res.status(401).json({
       message: 'failed',
@@ -94,7 +103,9 @@ exports.protect = async (req, res, next) => {
         message: 'The user belonging to this token no longer exist',
       });
     }
+
     //check if user changed passwords after the JWT token was created
+
     if (freshUser.changedPasswordAfter(decoded.iat)) {
       return res.status(401).json({
         status: 'failed',
@@ -113,7 +124,6 @@ exports.protect = async (req, res, next) => {
 
 exports.forgotPassword = async (req, res, next) => {
   try {
-    console.log(req.body);
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res.status(404).json({
@@ -180,11 +190,34 @@ exports.resetPasssword = async (req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save();
 
-    const token = signToken(user._id);
-    res.status(200).json({
-      status: 'success',
-      token,
+    createSendToken(user, 200, res);
+  } catch (error) {
+    return res.status(500).json({
+      status: 'failed',
+      error,
     });
+  }
+};
+
+exports.updatePassword = async (req, res, next) => {
+  try {
+    //get user from database
+    const user = await User.findById(req.user.id).select('+password');
+    //return if no user found or if password is incorrect, second function checks if passwords match
+    if (
+      !(await user.correctPassword(req.body.currentPassword, user.password))
+    ) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Your current password is wrong',
+      });
+    }
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+
+    await user.save();
+
+    createSendToken(user, 200, res);
   } catch (error) {
     return res.status(500).json({
       status: 'failed',
