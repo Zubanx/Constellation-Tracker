@@ -21,3 +21,12 @@ app.use('/constellations', constellationRouter);
 app.use('/user', userRouter);
 
 module.exports = app;
+
+
+// adding cors for browser to call our api
+const cors = require('cors')
+// allow your local Flutter dev server + future prod domain
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174'],
+  credentials: false // we’re NOT using cookies for Option A
+}));
