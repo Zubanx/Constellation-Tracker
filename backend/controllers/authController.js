@@ -33,14 +33,37 @@ const createSendToken = (user, statusCode, res) => {
 };
 exports.signup = async (req, res, next) => {
   try {
+    //generate email confirmation token
+    const confirmationToken = crypto.randomBytes(32).toString('hex');
+
+    // hash the token to store in database
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(confirmationToken)
+      .digest('hex');
+
+    // create new user with emailConfirmed : false
     const newUser = await User.create({
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
+      emailConfirmed: false,
+      emailConfirmToken: hashedToken,
+      emailConfirmExpires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
+    // send email to user with unhashed token
+    sendEmail.confirmationEmail(
+      newUser.email,
+      newUser.username,
+      confirmationToken
+    );
 
-    createSendToken(newUser, 201, res);
+    res.status(201).json({
+      status: 'success',
+      message:
+        'Registration successful! Please check your email to confirm your account',
+    });
   } catch (error) {
     res.status(401).json({
       status: 'failed',
@@ -48,6 +71,39 @@ exports.signup = async (req, res, next) => {
     });
   }
 };
+
+exports.confirmEmail = async (req, res, next) => {
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+  try{
+    const user = await User.findOne({
+      emailConfirmToken: hashedToken,
+      emailConfirmExpires: { $gt: Date.now() }
+    });
+
+    if(!user){
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Token is invalid or has expired'
+      })
+    }
+
+    // confirm the email
+    user.emailConfirmed = true;
+    user.emailConfirmToken = undefined;
+    user.emailConfirmExpires = undefined;
+    await user.save();
+
+    createSendToken(user, 200, res);
+
+  }catch (error){
+    res.status(500).json({
+      status: 'failed',
+      error: error.message
+    })
+  }
+
+
+}
 
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
