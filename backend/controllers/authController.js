@@ -73,37 +73,37 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.confirmEmail = async (req, res, next) => {
-  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-  try{
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+  try {
     const user = await User.findOne({
       emailConfirmToken: hashedToken,
-      emailConfirmExpires: { $gt: Date.now() }
+      emailConfirmExpires: { $gt: Date.now() },
     });
 
-    if(!user){
+    if (!user) {
       return res.status(400).json({
         status: 'failed',
-        message: 'Token is invalid or has expired'
-      })
+        message: 'Token is invalid or has expired',
+      });
     }
 
     // confirm the email
     user.emailConfirmed = true;
     user.emailConfirmToken = undefined;
     user.emailConfirmExpires = undefined;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     createSendToken(user, 200, res);
-
-  }catch (error){
+  } catch (error) {
     res.status(500).json({
       status: 'failed',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-
-
-}
+};
 
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
@@ -121,6 +121,13 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({
         status: 'failed',
         message: 'Incorrect username or password',
+      });
+    }
+
+    if (!user.emailConfirmed) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Please confirm your email before logging in',
       });
     }
 
@@ -191,15 +198,11 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `${req.protocol}://${req.get(
-      'host'
-    )}/user/resetPassword/${resetToken}`;
-
-    sendEmail.passwordResetEmail(user.email, user.username, resetUrl);
+    sendEmail.passwordResetEmail(user.email, user.username, resetToken);
   } catch (error) {
     return res.status(500).json({
       status: 'failed',
-      error,
+      error: error.message,
     });
   }
 };

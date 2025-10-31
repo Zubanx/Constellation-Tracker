@@ -6,13 +6,14 @@ exports.confirmationEmail = async (
   firstName,
   confirmationToken
 ) => {
+  const confirmationUrl = `${process.env.APP_URL}/user/confirmEmail/${confirmationToken}`;
   const msg = {
     to: userEmail,
     from: 'ja316466@ucf.edu',
     templateId: 'd-61ca99dbbc0f491da91f6a7ce5666c74',
     dynamicTemplateData: {
       name: firstName,
-      confirmationToken: confirmationToken,
+      confirmationUrl: confirmationUrl,
     },
   };
   try {
@@ -24,7 +25,11 @@ exports.confirmationEmail = async (
   }
 };
 
-exports.passwordResetEmail = async (userEmail, firstName, resetUrl) => {
+exports.passwordResetEmail = async (userEmail, firstName, resetToken) => {
+  const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/user/resetPassword/${resetToken}`;
+
   const msg = {
     to: userEmail,
     from: 'ja316466@ucf.edu',
