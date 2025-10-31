@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const email = require('./utils/email')
 
 const constellationRouter = require('./routes/constellationRoutes');
 const userRouter = require('./routes/userRoutes');

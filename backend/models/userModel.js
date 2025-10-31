@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same',
     },
   },
+  emailConfirmed: {
+    type: Boolean,
+    default: false
+  },
+  emailConfirmToken: String,
+  emailConfirmExpires: Date,
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
