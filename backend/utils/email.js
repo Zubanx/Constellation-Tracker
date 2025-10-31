@@ -9,7 +9,10 @@ exports.confirmationEmail = async (
   const confirmationUrl = `${process.env.APP_URL}/user/confirmEmail/${confirmationToken}`;
   const msg = {
     to: userEmail,
-    from: 'ja316466@ucf.edu',
+    from: {
+      email: 'noreply@cop-433121.com',
+      name: 'Constellation Tracker'
+    },
     templateId: 'd-61ca99dbbc0f491da91f6a7ce5666c74',
     dynamicTemplateData: {
       name: firstName,
@@ -32,7 +35,10 @@ exports.passwordResetEmail = async (userEmail, firstName, resetToken) => {
 
   const msg = {
     to: userEmail,
-    from: 'ja316466@ucf.edu',
+    from: {
+      email: 'noreply@cop-433121.com',
+      name: 'Constellation Tracker'
+    },
     templateId: 'd-ed1bad55f642474ea8503179e4a15472',
     dynamicTemplateData: {
       name: firstName,
