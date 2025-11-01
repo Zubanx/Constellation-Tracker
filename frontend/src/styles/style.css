@@ -17,6 +17,7 @@ body {
 
 .box {
     background-color: #1C2541;
+    border-radius: 20px;
 }
 
 .primary-text {
@@ -29,4 +30,5 @@ body {
 
 .accent {
     background-color: #5E60CE;
+    border-radius: 20px;
 }

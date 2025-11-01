@@ -21,6 +21,7 @@ body {
     height: 100px;
     width: 60%;
     font-size: 2rem;
+    border: none;
 }
 
 #login-div h2 {
