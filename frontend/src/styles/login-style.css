@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     padding: 30px;
     width: 75vw;
     height: 50vh;
@@ -24,7 +24,7 @@ body {
     border: none;
 }
 
-#login-div h2 {
+#login-div h2, #login-div a {
     font-size: 4rem;
 }
 
