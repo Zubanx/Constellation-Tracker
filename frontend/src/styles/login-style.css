@@ -17,7 +17,18 @@ body {
     height: 50vh;
 }
 
+#login-div input {
+    height: 100px;
+    width: 60%;
+    font-size: 2rem;
+}
+
+#login-div h2 {
+    font-size: 4rem;
+}
+
 #title {
+    font-size: 6rem;
     text-align: center;
     margin-bottom: 50px;
 }
