@@ -8,10 +8,22 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+    background-color: #0B132B;
+}
+
+.box {
+    background-color: #1C2541;
+}
+
 .primary-text {
     color: #F4F3EE;
 }
 
-.secondary-text {
+.secondary-text, input::placeholder {
     color: #C9C9C9;
+}
+
+.accent {
+    background-color: #5E60CE;
 }
