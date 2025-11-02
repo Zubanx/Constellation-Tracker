@@ -33,3 +33,12 @@ body {
     background-color: #5E60CE;
     border-radius: 20px;
 }
+
+button {
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #48499b;
+    translate: 0 5px; 
+}
