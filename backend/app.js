@@ -33,6 +33,6 @@ app.use(
       'http://localhost:5173',
       'http://localhost:5174',
     ],
-    credentials: false, // we’re NOT using cookies for Option A
+    credentials: false, // were NOT using cookies for Option A
   })
 );
