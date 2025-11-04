@@ -5,23 +5,12 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const email = require('./utils/email')
+const email = require('./utils/email');
 
 const constellationRouter = require('./routes/constellationRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
-app.use(helmet());
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
-
-app.use(express.json());
-
-app.use('/constellations', constellationRouter);
-app.use('/user', userRouter);
-
-module.exports = app;
 
 // adding cors for browser to call our api
 const cors = require('cors');
@@ -36,3 +25,15 @@ app.use(
     credentials: false, // were NOT using cookies for Option A
   })
 );
+
+app.use(helmet());
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+app.use(express.json());
+
+app.use('/constellations', constellationRouter);
+app.use('/user', userRouter);
+
+module.exports = app;
