@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Register() {
     return(
         <div id="register-div" className="box">
@@ -6,7 +8,7 @@ function Register() {
             <input type="password" id="register-password" className="secondary-text accent" placeholder="PASSWORD"/>
             <input type="password" id="confirm-password" className="secondary-text accent" placeholder="CONFIRM PASSWORD"/>
             <button id="register-button" className="secondary-text accent">SUBMIT</button>
-            <a href="">LOGIN</a>
+            <Link to="/" className="primary-text">LOGIN</Link>
         </div>
     );
 }
