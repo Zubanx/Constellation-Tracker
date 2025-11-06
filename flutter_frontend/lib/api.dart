@@ -20,6 +20,42 @@ class Api {
     if (token == null) throw Exception('No token in response');
   }
 
+  //Register
+  Future<String> signup({
+    required String username,
+    required String email,
+    required String password,
+    required String passwordConfirm,
+  }) async {
+    final r = await http.post(
+      Uri.parse('$apiBase/user/signup'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'email': email,
+        'password': password,
+        'passwordConfirm': passwordConfirm,
+      }),
+    );
+
+    final body = r.body.isNotEmpty ? jsonDecode(r.body) : {};
+    if (r.statusCode != 201 && r.statusCode != 200) {
+      final msg =
+          body['message'] ??
+          body['error']?.toString() ??
+          'Signup failed (${r.statusCode})';
+      throw Exception(msg);
+    }
+    // Backend returns a message like “Registration successful! Please check your email…”
+    return (body['message'] ?? 'Registration successful. Check your email.')
+        as String;
+  }
+
+  // Logout (client-side)
+  void logout() {
+    token = null;
+  }
+
   Map<String, String> get _auth =>
       token == null ? {} : {'Authorization': 'Bearer $token'};
 

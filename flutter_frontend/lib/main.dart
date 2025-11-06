@@ -50,6 +50,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _goRegister() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +89,96 @@ class _LoginScreenState extends State<LoginScreen> {
                 FilledButton(
                   onPressed: busy ? null : _login,
                   child: Text(busy ? '...' : 'Login'),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: _goRegister,
+                  child: const Text('Create an account'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final userCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+  final confirmCtrl = TextEditingController();
+  bool busy = false;
+  String? err;
+
+  Future<void> _signup() async {
+    setState(() {
+      busy = true;
+      err = null;
+    });
+    try {
+      final msg = await api.signup(
+        username: userCtrl.text.trim(),
+        email: emailCtrl.text.trim(),
+        password: passCtrl.text,
+        passwordConfirm: confirmCtrl.text,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      Navigator.pop(context); // go back to login after successful signup
+    } catch (e) {
+      setState(() => err = e.toString());
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Create Account')),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 360),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: userCtrl,
+                  decoration: const InputDecoration(labelText: 'Username'),
+                ),
+                TextField(
+                  controller: emailCtrl,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                TextField(
+                  controller: passCtrl,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                ),
+                TextField(
+                  controller: confirmCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm password',
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 12),
+                if (err != null)
+                  Text(err!, style: const TextStyle(color: Colors.red)),
+                const SizedBox(height: 8),
+                FilledButton(
+                  onPressed: busy ? null : _signup,
+                  child: Text(busy ? '...' : 'Create account'),
                 ),
               ],
             ),
@@ -144,6 +241,15 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
+  void _logout() {
+    api.logout();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (_) => false,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -155,6 +261,13 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Constellations'),
+        actions: [
+          IconButton(
+            tooltip: 'Logout',
+            onPressed: _logout,
+            icon: const Icon(Icons.logout),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(
@@ -217,6 +330,7 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 }
+
 
 
 
