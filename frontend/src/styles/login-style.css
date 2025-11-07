@@ -6,7 +6,7 @@ body {
     min-height: 100vh;
 }
 
-#login-div {
+#login-div, #register-div {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,14 +17,14 @@ body {
     height: 50vh;
 }
 
-#login-div input {
+#login-div input, #register-div input {
     height: 100px;
     width: 60%;
     font-size: 2rem;
     border: none;
 }
 
-#login-div h2, #login-div a {
+#login-div h2, #login-div a, #register-div h2, #register-div a {
     font-size: 4rem;
 }
 
@@ -34,7 +34,7 @@ body {
     margin-bottom: 50px;
 }
 
-#login-button {
+#login-button, #register-button {
     font-size: 2rem;
     border: none;
     height: 40px;
