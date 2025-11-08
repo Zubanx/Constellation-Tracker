@@ -1,29 +1,46 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import type { MouseEvent } from "react";
 
 function Login() {
-    function handleSetLoginName(e: any) : void {
-        setLoginName(e.target.value);
-    }
-
-    function handleSetPassword(e: any) : void {
-        setPassword(e.target.value);
-    }
-
-    
-    
     const navigate = useNavigate();
-    const [message,setMessage] = useState('');
-    const [loginName,setLoginName] = useState('');
-    const [loginPassword,setPassword] = useState('');
+    const [message, setMessage] = useState("");
+    const [loginName, setLoginName] = useState("");
+    const [loginPassword, setPassword] = useState("");
+
+    async function doLogin(e: MouseEvent) {
+        e.preventDefault();
+
+        try {
+            let result = await fetch("", {
+                method : "POST",
+                body : JSON.stringify({loginName, loginPassword}),
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            });
+
+            result = await result.json();
+
+            if (result.id <= 0) {
+                setMessage("Username or password incorrect");
+            }
+            else {
+                setMessage("");
+                navigate("/UserConstellations");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return(
         <div id="login-div" className="box">
             <h2 className="primary-text">LOGIN</h2>
-            <input type="text" id="login-name" className="secondary-text accent" placeholder="USERNAME" onChange={handleSetLoginName}/>
-            <input type="password" id="login-password" className="secondary-text accent" placeholder="PASSWORD" onChange={handleSetPassword}/>
-            <button id="login-button" className="secondary-text accent">SUBMIT</button>
+            <input type="text" id="login-name" className="secondary-text accent" placeholder="USERNAME" onChange={(e) => setLoginName(e.target.value)}/>
+            <input type="password" id="login-password" className="secondary-text accent" placeholder="PASSWORD" onChange={(e) => setPassword(e.target.value)}/>
+            <button id="login-button" className="secondary-text accent" onClick={doLogin}>SUBMIT</button>
             <span id="login-result">{message}</span>
             <Link to="/register" className="primary-text">REGISTER</Link>
         </div>
