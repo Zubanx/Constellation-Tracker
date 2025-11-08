@@ -28,7 +28,7 @@ function Login() {
             }
             else {
                 setMessage("");
-                navigate("/UserConstellations");
+                navigate("/userConstellations");
             }
         } catch (error) {
             console.error(error);
