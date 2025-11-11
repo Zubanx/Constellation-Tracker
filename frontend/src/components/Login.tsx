@@ -40,7 +40,7 @@ function Login() {
             <input type="text" id="login-name" className="secondary-text accent" placeholder="USERNAME" onChange={(e) => setLoginName(e.target.value)}/>
             <input type="password" id="login-password" className="secondary-text accent" placeholder="PASSWORD" onChange={(e) => setPassword(e.target.value)}/>
             <button id="login-button" className="secondary-text accent" onClick={doLogin}>SUBMIT</button>
-            <span id="login-result">{message}</span>
+            <span id="login-result" className="secondary-text">{message}</span>
             <Link to="/register" className="primary-text">REGISTER</Link>
         </div>
     );
