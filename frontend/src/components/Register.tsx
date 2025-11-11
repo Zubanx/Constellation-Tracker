@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import type { MouseEvent } from "react";
 
 function Register() {
-    const navigate = useNavigate();
     const [message, setMessage] = useState("");
     const [registerName, setRegisterName] = useState("");
     const [registerEmail, setRegisterEmail] = useState("");
@@ -15,8 +14,25 @@ function Register() {
 
         try {
             const result = await fetch("http://localhost:3000/user/signup", {
-
+                method : "POST",
+                body : JSON.stringify({username : registerName, email : registerEmail, password : registerPassword, passwordConfirm : registerConfirmPass}),
+                headers : {
+                    "Content-Type" : "application/json"
+                }
             });
+
+            const registerMessage = await result.json();
+
+            if (!result.ok) {
+                setMessage(registerMessage.error);
+            }
+            else {
+                setMessage(registerMessage.message);
+                setRegisterName("");
+                setRegisterEmail("");
+                setRegisterPassword("");
+                setRegisterConfirmPass("");
+            }
         } catch (error) {
             console.error(error);
         }
