@@ -1,0 +1,44 @@
+* {
+    box-sizing: border-box;
+    font-family: "inter Variable";
+    font-weight: 400;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0B132B;
+}
+
+.box {
+    background-color: #1C2541;
+    border-radius: 20px;
+}
+
+.primary-text {
+    color: #F4F3EE;
+}
+
+.secondary-text, input::placeholder {
+    color: #C9C9C9;
+}
+
+.accent {
+    background-color: #5E60CE;
+    border-radius: 20px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #48499b;
+    translate: 0 5px; 
+}
