@@ -13,13 +13,15 @@ function Login() {
         e.preventDefault();
 
         try {
-            let result = await fetch("", {
+            let result = await fetch("http://localhost:3000/user/login", {
                 method : "POST",
                 body : JSON.stringify({loginName, loginPassword}),
                 headers : {
                     "Content-Type" : "application/json"
                 }
             });
+
+            console.log(result);
 
             result = await result.json();
 
