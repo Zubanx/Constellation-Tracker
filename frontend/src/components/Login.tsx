@@ -20,13 +20,11 @@ function Login() {
                     "Content-Type" : "application/json"
                 }
             });
-
-            console.log(result);
-
+            
             result = await result.json();
-
-            if (result.id <= 0) {
-                setMessage("Username or password incorrect");
+            
+            if (!result.ok) {
+                setMessage(result.message);
             }
             else {
                 setMessage("");
