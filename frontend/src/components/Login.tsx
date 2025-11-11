@@ -13,18 +13,17 @@ function Login() {
         e.preventDefault();
 
         try {
-            let result = await fetch("http://localhost:3000/user/login", {
+            const result = await fetch("http://localhost:3000/user/login", {
                 method : "POST",
-                body : JSON.stringify({loginName, loginPassword}),
+                body : JSON.stringify({username: loginName, password: loginPassword}),
                 headers : {
                     "Content-Type" : "application/json"
                 }
             });
             
-            result = await result.json();
-            
             if (!result.ok) {
-                setMessage(result.message);
+                const loginMessage = await result.json();
+                setMessage(loginMessage.message);
             }
             else {
                 setMessage("");
