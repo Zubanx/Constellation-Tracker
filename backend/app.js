@@ -10,6 +10,7 @@ const email = require('./utils/email');
 const constellationRouter = require('./routes/constellationRoutes');
 const userRouter = require('./routes/userRoutes');
 const observationRouter = require('./routes/observationRoutes');
+const progressRouter = require('./routes/progressRoutes');
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use(express.json());
 app.use('/constellations', constellationRouter);
 app.use('/user', userRouter);
 app.use('/observations', observationRouter);
+app.use('/progress', progressRouter);
 
 module.exports = app;

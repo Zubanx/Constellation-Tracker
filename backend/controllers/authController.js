@@ -135,7 +135,7 @@ exports.login = async (req, res, next) => {
   } catch (error) {
     res.status(401).json({
       message: 'failed',
-      error,
+      error: error.message,
     });
   }
 };
