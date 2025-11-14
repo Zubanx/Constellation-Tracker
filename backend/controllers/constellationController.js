@@ -1,4 +1,4 @@
-const Constellation = require('../models/constellationModel');
+const Constellation = require('../models/Constellation');
 const { get } = require('mongoose');
 
 exports.getAll = async (req, res, next) => {
