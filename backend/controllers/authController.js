@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const sendEmail = require('../utils/email');
@@ -135,7 +135,7 @@ exports.login = async (req, res, next) => {
   } catch (error) {
     res.status(401).json({
       message: 'failed',
-      error,
+      error: error.message,
     });
   }
 };
