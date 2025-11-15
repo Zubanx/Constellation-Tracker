@@ -35,9 +35,9 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
-app.use('/constellations', constellationRouter);
-app.use('/user', userRouter);
-app.use('/observations', observationRouter);
-app.use('/progress', progressRouter);
+app.use('/api/constellations', constellationRouter);
+app.use('/api/user', userRouter);
+app.use('/api/observations', observationRouter);
+app.use('/api/progress', progressRouter);
 
 module.exports = app;
