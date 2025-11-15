@@ -1,4 +1,4 @@
-const userConstellation = require('../models/userConstellationModel');
+const userConstellation = require('../models/Observation');
 const { get } = require('mongoose');
 
 exports.addUserConstellation = async (req, res, next) => {
