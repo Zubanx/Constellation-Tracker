@@ -12,7 +12,7 @@ function Login() {
         e.preventDefault();
 
         try {
-            const result = await fetch("http://localhost:3000/user/login", {
+            const result = await fetch("http://localhost:3000/api/user/login", {
                 method : "POST",
                 body : JSON.stringify({username: loginName, password: loginPassword}),
                 headers : {

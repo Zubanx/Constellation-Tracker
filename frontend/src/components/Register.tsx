@@ -13,7 +13,7 @@ function Register() {
         e.preventDefault();
 
         try {
-            const result = await fetch("http://localhost:3000/user/signup", {
+            const result = await fetch("http://localhost:3000/api/user/signup", {
                 method : "POST",
                 body : JSON.stringify({username : registerName, email : registerEmail, password : registerPassword, passwordConfirm : registerConfirmPass}),
                 headers : {
@@ -24,7 +24,19 @@ function Register() {
             const registerMessage = await result.json();
 
             if (!result.ok) {
-                setMessage(registerMessage.error);
+                switch (registerMessage.error) {
+                    case "User validation failed: passwordConfirm: Passwords are not the same":
+                        setMessage("Password and password confirm do not match");
+                        break;
+                    
+                    case "User validation failed: email: Please provide a valid email":
+                        setMessage("Email is not valid");
+                        break;
+                
+                    default:
+                        setMessage(registerMessage.error);
+                        break;
+                }
             }
             else {
                 setMessage(registerMessage.message);
