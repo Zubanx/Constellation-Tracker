@@ -17,16 +17,7 @@ const app = express();
 // adding cors for browser to call our api
 const cors = require('cors');
 // allow local Flutter dev server + future prod domain
-app.use(
-  cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://localhost:5174',
-    ],
-    credentials: false, // were NOT using cookies for Option A
-  })
-);
+app.use(cors());
 
 app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
