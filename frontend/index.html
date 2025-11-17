@@ -1,11 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background: #0a0e27;">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Constellation Tracker</title>
-    <meta name="description" content="Track what constellations you've seen and try to fill out the gallery.">
+    
+    <!-- Cloudinary Upload Widget -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    
+    <style>
+      html {
+        background: #0a0e27 !important;
+      }
+      
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%) !important;
+        background-attachment: fixed !important;
+        min-height: 100vh !important;
+        overflow-x: hidden;
+      }
+      
+      #root {
+        min-height: 100vh;
+        background: transparent;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

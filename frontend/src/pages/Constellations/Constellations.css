@@ -1,0 +1,299 @@
+/* Constellations.css */
+
+.constellations-container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+  color: #ffffff;
+}
+
+/* Starfield background */
+.constellations-container .stars,
+.constellations-container .stars2,
+.constellations-container .stars3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* .constellations-container .stars {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><circle cx="1" cy="1" r="1" fill="white" opacity="0.8"/></svg>') repeat;
+  animation: animateStars 100s linear infinite;
+}
+
+.constellations-container .stars2 {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="3" height="3"><circle cx="1.5" cy="1.5" r="1" fill="white" opacity="0.5"/></svg>') repeat;
+  animation: animateStars 150s linear infinite;
+}
+
+.constellations-container .stars3 {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="1.5" fill="white" opacity="0.3"/></svg>') repeat;
+  animation: animateStars 200s linear infinite;
+} */
+
+@keyframes animateStars {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2000px);
+  }
+}
+
+/* Page Header */
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.page-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+}
+
+/* Filters Card */
+.filters-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+}
+
+.filters-card .form-control,
+.filters-card .form-select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.filters-card .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.filters-card .form-control:focus,
+.filters-card .form-select:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #4158D0;
+  box-shadow: 0 0 0 0.2rem rgba(65, 88, 208, 0.25);
+  color: #ffffff;
+}
+
+.filters-card .form-select option {
+  background: #1a1f3a;
+  color: #ffffff;
+}
+
+.filters-card .btn-outline-light {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.filters-card .btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* Results Count */
+.results-count {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* Constellation Cards */
+.constellation-card-link {
+  text-decoration: none;
+  display: block;
+  height: 100%;
+}
+
+.constellation-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.constellation-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(65, 88, 208, 0.3);
+  border-color: #4158D0;
+}
+
+.constellation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.constellation-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFD700;
+  margin-bottom: 0;
+}
+
+.constellation-abbr {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.constellation-body {
+  flex: 1;
+}
+
+.constellation-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.constellation-info:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.info-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.constellation-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.view-details {
+  color: #4158D0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.constellation-card:hover .view-details {
+  color: #FFD700;
+}
+
+/* No Results */
+.no-results {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 4rem 2rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+}
+
+.no-results h3 {
+  color: #ffffff;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.no-results p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.no-results .btn-primary {
+  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+  border: none;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.no-results .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(65, 88, 208, 0.4);
+}
+
+/* Loading State */
+.constellations-container .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .page-title {
+    font-size: 2.5rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .filters-card {
+    padding: 1rem;
+  }
+  
+  .constellation-card {
+    padding: 1.25rem;
+  }
+  
+  .constellation-name {
+    font-size: 1.25rem;
+  }
+  
+  .no-results {
+    padding: 3rem 1.5rem;
+  }
+  
+  .no-results h3 {
+    font-size: 1.5rem;
+  }
+}

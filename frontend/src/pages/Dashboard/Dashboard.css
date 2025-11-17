@@ -1,0 +1,403 @@
+/* Dashboard.css — FIXED VERSION */
+
+.dashboard-container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Starfield - FIXED */
+.dashboard-container .stars,
+.dashboard-container .stars2,
+.dashboard-container .stars3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layer 1 — Small bright stars */
+.dashboard-container .stars {
+  background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 60px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 50px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: animateStars 80s linear infinite;
+  opacity: 0.9;
+}
+
+/* Layer 2 — Medium dimmer stars */
+.dashboard-container .stars2 {
+  background: radial-gradient(1px 1px at 40px 60px, white, transparent),
+    radial-gradient(1px 1px at 110px 90px, white, transparent),
+    radial-gradient(1px 1px at 170px 30px, white, transparent);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: animateStars 120s linear infinite;
+  opacity: 0.6;
+}
+
+/* Layer 3 — Large faint twinkling stars */
+.dashboard-container .stars3 {
+  background: radial-gradient(2px 2px at 75px 125px, white, transparent),
+    radial-gradient(2px 2px at 150px 75px, white, transparent);
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: animateStars 180s linear infinite;
+  opacity: 0.4;
+}
+
+/* Smooth diagonal star movement */
+@keyframes animateStars {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 10000px 10000px;
+  }
+}
+
+/* Titles */
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+}
+
+/* Stat Cards & Section Cards */
+.stat-card,
+.quick-actions-card,
+.recent-observations-card,
+.progress-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.stat-card:hover,
+.quick-actions-card:hover,
+.progress-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(65, 88, 208, 0.3);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Quick Actions */
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem 1rem;
+  text-decoration: none;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.action-btn:hover {
+  background: rgba(65, 88, 208, 0.2);
+  border-color: #4158d0;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(65, 88, 208, 0.3);
+  color: #ffffff;
+}
+
+.action-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.action-text {
+  font-weight: 600;
+}
+
+/* TABLE STYLES - FIXED */
+.observation-table {
+  background: transparent !important;
+  color: #ffffff;
+  margin-bottom: 0;
+}
+
+.observation-table thead th {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffd700;
+  font-weight: 600;
+  padding: 1rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.observation-table tbody tr {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.observation-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(65, 88, 208, 0.2);
+}
+
+.observation-table tbody td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  vertical-align: middle;
+}
+
+.observation-table tbody td strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Rating Stars */
+.rating {
+  display: flex;
+  gap: 3px;
+}
+
+.star {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 1.1rem;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+/* Observation Items (if you switch to card layout later) */
+.observation-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.observation-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #4158d0;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(65, 88, 208, 0.3);
+}
+
+.observation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.observation-date {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.observation-location {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.observation-rating {
+  display: flex;
+  gap: 3px;
+}
+
+.observation-constellation {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+/* Section Heading */
+.section-heading {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+/* Progress & Buttons */
+.progress {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 10px;
+}
+
+.progress-bar {
+  background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
+  border: none;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(65, 88, 208, 0.4);
+}
+
+.btn-outline-light {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.btn-outline-primary {
+  color: #4158d0;
+  border-color: #4158d0;
+  background: rgba(65, 88, 208, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background: #4158d0;
+  border-color: #4158d0;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+  .observation-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .observation-rating {
+    align-self: flex-start;
+  }
+
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+}
+/* TABLE STYLES - COMPLETE OVERRIDE */
+.observation-table,
+.observation-table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.observation-table thead th {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffd700 !important;
+  font-weight: 600;
+  padding: 1rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.observation-table tbody tr {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease;
+}
+
+.observation-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(65, 88, 208, 0.2);
+}
+
+.observation-table tbody td {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: none !important;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.9) !important;
+  vertical-align: middle;
+  background: transparent !important;
+}
+
+.observation-table tbody td strong {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Additional Bootstrap overrides */
+.table-responsive {
+  background: transparent !important;
+}
+
+.recent-observations-card .table {
+  --bs-table-bg: transparent !important;
+  --bs-table-striped-bg: transparent !important;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.08) !important;
+}

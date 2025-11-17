@@ -1,26 +1,23 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import './styles/style.css';
-import LoginPage from './pages/LoginPage';
-import './styles/login-style.css';
-import RegisterPage from './pages/RegisterPage';
-// @ts-expect-error For some reason this import gives an error even though the font exists
-import "@fontsource-variable/inter";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const router = createBrowserRouter([
-  {
-    path : '/',
-    element : <LoginPage/>
-  },
-  {
-    path : '/register',
-    element : <RegisterPage/>
-  }
-]);
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>,
-)
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Failed to find the root element');
+}
+
+const root = ReactDOM.createRoot(rootElement);
+
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);

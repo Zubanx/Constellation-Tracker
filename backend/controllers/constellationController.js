@@ -20,16 +20,27 @@ exports.getAll = async (req, res, next) => {
 };
 
 exports.getOne = async (req, res, next) => {
-  let constellation;
-  console.log('ID: ', req.params.id);
   try {
-    constellation = await Constellation.findById(req.params.id);
+    // Convert the URL param (string) to a Number
+    const id = parseInt(req.params.id, 10);
+
+    // Validate that it's a valid number
+    if (isNaN(id)) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid constellation ID. Must be a number.',
+      });
+    }
+
+    const constellation = await Constellation.findOne({ id });
+
     if (!constellation) {
       return res.status(404).json({
         status: 'failed',
-        message: 'Cannot find Constellation',
+        message: 'Constellation not found',
       });
     }
+
     res.status(200).json({
       status: 'success',
       data: {
@@ -39,7 +50,7 @@ exports.getOne = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       status: 'failed',
-      error,
+      error: error.message,
     });
   }
 };
