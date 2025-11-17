@@ -9,8 +9,13 @@ Future<void> uploadImage(String apiBase, String? token) async {
   if (picked == null || picked.files.isEmpty) return;
   final f = picked.files.first;
 
-  final req = http.MultipartRequest('POST', Uri.parse('$apiBase/constellations'));
-  req.files.add(http.MultipartFile.fromBytes('image', f.bytes!, filename: f.name));
+  final req = http.MultipartRequest(
+    'POST',
+    Uri.parse('$apiBase/api/constellations'),
+  );
+  req.files.add(
+    http.MultipartFile.fromBytes('image', f.bytes!, filename: f.name),
+  );
   if (token != null) req.headers['Authorization'] = 'Bearer $token';
 
   final res = await req.send();
