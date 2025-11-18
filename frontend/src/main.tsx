@@ -10,6 +10,7 @@ import './styles/home-style.css';
 // @ts-expect-error For some reason this import gives an error even though the font exists
 import "@fontsource-variable/inter";
 import GalleryPage from './pages/GalleryPage';
+import './styles/gallery-style.css';
 
 const router = createBrowserRouter([
   {
