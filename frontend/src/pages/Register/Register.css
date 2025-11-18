@@ -1,0 +1,261 @@
+/* Register.css */
+
+.register-container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+  overflow: hidden;
+}
+
+/* Starfield animations - FIXED */
+.register-container .stars,
+.register-container .stars2,
+.register-container .stars3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layer 1 — Small bright stars */
+.register-container .stars {
+  background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+              radial-gradient(2px 2px at 60px 70px, white, transparent),
+              radial-gradient(1px 1px at 50px 50px, white, transparent),
+              radial-gradient(1px 1px at 130px 80px, white, transparent),
+              radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: animateStars 100s linear infinite;
+  opacity: 0.9;
+}
+
+/* Layer 2 — Medium dimmer stars */
+.register-container .stars2 {
+  background: radial-gradient(1px 1px at 40px 60px, white, transparent),
+              radial-gradient(1px 1px at 110px 90px, white, transparent),
+              radial-gradient(1px 1px at 170px 30px, white, transparent);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: animateStars 150s linear infinite;
+  opacity: 0.6;
+}
+
+/* Layer 3 — Large faint twinkling stars */
+.register-container .stars3 {
+  background: radial-gradient(2px 2px at 75px 125px, white, transparent),
+              radial-gradient(2px 2px at 150px 75px, white, transparent);
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: animateStars 200s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes animateStars {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 10000px 10000px;
+  }
+}
+
+/* Register card styling */
+.register-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+}
+
+.register-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4158D0, #C850C0, #FFCC70);
+  border-radius: 20px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.register-card:hover::before {
+  opacity: 0.4;
+}
+
+/* Constellation icon */
+.constellation-icon {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Title styling */
+.register-title {
+  color: #1a1f3a;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+/* Form controls - FIXED TEXT VISIBILITY */
+.register-container .form-control {
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+  color: #1a1f3a !important;
+  font-weight: 500;
+}
+
+.register-container .form-control::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+.register-container .form-control:focus {
+  border-color: #4158D0;
+  box-shadow: 0 0 0 0.2rem rgba(65, 88, 208, 0.15);
+  background-color: #ffffff;
+  color: #1a1f3a !important;
+}
+
+.register-container .form-control.is-invalid {
+  border-color: #dc3545;
+  color: #1a1f3a !important;
+}
+
+.register-container .form-control.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+  color: #1a1f3a !important;
+}
+
+/* Autofill styling - prevent browser from changing text color */
+.register-container .form-control:-webkit-autofill,
+.register-container .form-control:-webkit-autofill:hover,
+.register-container .form-control:-webkit-autofill:focus,
+.register-container .form-control:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #1a1f3a !important;
+  color: #1a1f3a !important;
+}
+
+.register-container .form-label {
+  font-weight: 600;
+  color: #2d1b4e;
+  margin-bottom: 0.5rem;
+}
+
+/* Button styling */
+.register-container .btn-primary {
+  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.register-container .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(65, 88, 208, 0.4);
+  background: linear-gradient(135deg, #5269e0 0%, #d860d0 100%);
+}
+
+.register-container .btn-primary:disabled {
+  transform: none;
+  opacity: 0.7;
+}
+
+/* Checkbox styling */
+.register-container .form-check-input:checked {
+  background-color: #4158D0;
+  border-color: #4158D0;
+}
+
+.register-container .form-check-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Invalid feedback */
+.register-container .invalid-feedback {
+  display: block;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Links */
+.register-container a {
+  color: #4158D0;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.register-container a:hover {
+  color: #C850C0;
+  text-decoration: underline;
+}
+
+/* Horizontal rule */
+.register-container hr {
+  opacity: 0.1;
+}
+
+/* Card glow effect */
+@keyframes cardGlow {
+  0%, 100% {
+    box-shadow: 0 10px 40px rgba(65, 88, 208, 0.2);
+  }
+  50% {
+    box-shadow: 0 10px 60px rgba(200, 80, 192, 0.3);
+  }
+}
+
+.register-card {
+  animation: cardGlow 4s ease-in-out infinite;
+}
+
+/* Text inside card should be dark and readable */
+.register-card .card-body {
+  color: #1a1f3a;
+}
+
+.register-card .text-muted {
+  color: #666 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .register-card {
+    margin: 20px;
+  }
+  
+  .register-title {
+    font-size: 1.5rem;
+  }
+  
+  .register-container .card-body {
+    padding: 2rem !important;
+  }
+}

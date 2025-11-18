@@ -1,12 +1,15 @@
 const express = require('express');
 const constellationController = require('../controllers/constellationController');
-const protected = require('../controllers/authController').protect;
+const authProtect = require('../controllers/authController').authProtect;
 
 const router = express.Router();
 
 router.get('/', constellationController.getAll);
-router.get('/seen', protected, constellationController.getAllSeenConstellations);
+router.get(
+  '/seen',
+  authProtect,
+  constellationController.getAllSeenConstellations
+);
 router.get('/:id', constellationController.getOne);
-
 
 module.exports = router;

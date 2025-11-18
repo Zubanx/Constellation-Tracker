@@ -1,0 +1,277 @@
+/* EmailSent.css */
+
+.email-sent-container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+  overflow: hidden;
+}
+
+/* Starfield animations */
+.email-sent-container .stars,
+.email-sent-container .stars2,
+.email-sent-container .stars3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.email-sent-container .stars {
+  background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+              radial-gradient(2px 2px at 60px 70px, white, transparent),
+              radial-gradient(1px 1px at 50px 50px, white, transparent),
+              radial-gradient(1px 1px at 130px 80px, white, transparent),
+              radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: animateStars 100s linear infinite;
+  opacity: 0.9;
+}
+
+.email-sent-container .stars2 {
+  background: radial-gradient(1px 1px at 40px 60px, white, transparent),
+              radial-gradient(1px 1px at 110px 90px, white, transparent),
+              radial-gradient(1px 1px at 170px 30px, white, transparent);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: animateStars 150s linear infinite;
+  opacity: 0.6;
+}
+
+.email-sent-container .stars3 {
+  background: radial-gradient(2px 2px at 75px 125px, white, transparent),
+              radial-gradient(2px 2px at 150px 75px, white, transparent);
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: animateStars 200s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes animateStars {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 10000px 10000px;
+  }
+}
+
+/* Card styling */
+.email-sent-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.email-sent-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4158D0, #C850C0, #FFCC70);
+  border-radius: 20px;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+/* Email icon */
+.email-icon {
+  animation: bounceIn 0.8s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Title */
+.email-sent-title {
+  color: #1a1f3a;
+  font-weight: 700;
+  font-size: 1.8rem;
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+/* Message */
+.email-sent-message {
+  color: #666;
+  font-size: 1.1rem;
+  animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.email-sent-message strong {
+  color: #4158D0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Instructions card */
+.instructions-card {
+  background: rgba(65, 88, 208, 0.05);
+  border: 2px solid rgba(65, 88, 208, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+.instructions-title {
+  color: #1a1f3a;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.instructions-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.instructions-list li {
+  color: #666;
+  padding-left: 2.5rem;
+  position: relative;
+}
+
+.step-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #4158D0, #C850C0);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Info box */
+.info-box {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  animation: fadeIn 0.8s ease-out 0.8s both;
+}
+
+.info-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.info-text {
+  flex: 1;
+  text-align: left;
+}
+
+.info-text strong {
+  color: #1a1f3a;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.info-text p {
+  color: #666;
+}
+
+/* Button */
+.email-sent-container .btn-primary {
+  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.8s ease-out 1s both;
+}
+
+.email-sent-container .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(65, 88, 208, 0.4);
+}
+
+/* Resend section */
+.resend-section {
+  animation: fadeIn 0.8s ease-out 1.2s both;
+}
+
+.resend-section p {
+  font-size: 0.9rem;
+}
+
+.resend-section a {
+  color: #4158D0;
+  transition: color 0.3s ease;
+}
+
+.resend-section a:hover {
+  color: #C850C0;
+}
+
+/* Card body text */
+.email-sent-card .card-body {
+  color: #1a1f3a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .email-sent-card {
+    margin: 20px;
+  }
+  
+  .email-sent-title {
+    font-size: 1.5rem;
+  }
+  
+  .email-icon svg {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .instructions-list li {
+    font-size: 0.95rem;
+  }
+}

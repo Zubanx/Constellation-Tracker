@@ -1,0 +1,229 @@
+/* ConfirmEmail.css */
+
+.confirm-email-container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+  overflow: hidden;
+}
+
+/* Starfield animations */
+.confirm-email-container .stars,
+.confirm-email-container .stars2,
+.confirm-email-container .stars3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layer 1 — Small bright stars */
+.confirm-email-container .stars {
+  background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+              radial-gradient(2px 2px at 60px 70px, white, transparent),
+              radial-gradient(1px 1px at 50px 50px, white, transparent),
+              radial-gradient(1px 1px at 130px 80px, white, transparent),
+              radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: animateStars 100s linear infinite;
+  opacity: 0.9;
+}
+
+/* Layer 2 — Medium dimmer stars */
+.confirm-email-container .stars2 {
+  background: radial-gradient(1px 1px at 40px 60px, white, transparent),
+              radial-gradient(1px 1px at 110px 90px, white, transparent),
+              radial-gradient(1px 1px at 170px 30px, white, transparent);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: animateStars 150s linear infinite;
+  opacity: 0.6;
+}
+
+/* Layer 3 — Large faint twinkling stars */
+.confirm-email-container .stars3 {
+  background: radial-gradient(2px 2px at 75px 125px, white, transparent),
+              radial-gradient(2px 2px at 150px 75px, white, transparent);
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: animateStars 200s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes animateStars {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 10000px 10000px;
+  }
+}
+
+/* Confirmation card */
+.confirmation-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirmation-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4158D0, #C850C0, #FFCC70);
+  border-radius: 20px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.confirmation-card:hover::before {
+  opacity: 0.4;
+}
+
+/* Title */
+.confirmation-title {
+  color: #1a1f3a;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+/* Message */
+.confirmation-message {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Success icon animation */
+.success-icon {
+  animation: scaleIn 0.5s ease-in-out;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Error icon animation */
+.error-icon {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+/* Spinner container */
+.spinner-container {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Button styling */
+.confirm-email-container .btn-primary {
+  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.confirm-email-container .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(65, 88, 208, 0.4);
+}
+
+.confirm-email-container .btn-outline-secondary {
+  border: 2px solid #6c757d;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.confirm-email-container .btn-outline-secondary:hover {
+  transform: translateY(-2px);
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Links */
+.confirm-email-container a {
+  color: #4158D0;
+  transition: color 0.3s ease;
+}
+
+.confirm-email-container a:hover {
+  color: #C850C0;
+}
+
+/* Card body text color */
+.confirmation-card .card-body {
+  color: #1a1f3a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .confirmation-card {
+    margin: 20px;
+  }
+  
+  .confirmation-title {
+    font-size: 1.5rem;
+  }
+  
+  .success-icon svg,
+  .error-icon svg {
+    width: 60px;
+    height: 60px;
+  }
+}

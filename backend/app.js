@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const protected = require('./controllers/authController').protect;
+const authProtect = require('./controllers/authController').authProtect;
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -17,16 +17,30 @@ const app = express();
 // adding cors for browser to call our api
 const cors = require('cors');
 // allow local Flutter dev server + future prod domain
-app.use(
-  cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://localhost:5174',
-    ],
-    credentials: false, // were NOT using cookies for Option A
-  })
-);
+if (process.env.NODE_ENV === 'development') {
+  app.use(
+    cors({
+      origin: [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:5174',
+      ],
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+  );
+} else {
+  app.use(
+    cors({
+      origin: ['https://cop-433121.com'],
+      credentials: false,
+    })
+  );
+}
 
 app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
