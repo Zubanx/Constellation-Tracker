@@ -55,6 +55,13 @@ function Home() {
                 >
                     New Constellation
                 </button>
+                <button
+                    id="to-gallery"
+                    className="accent"
+                    onClick={() => navigate("/gallery")}
+                >
+                    To Gallery
+                </button>
             </div>
 
             <div id="constellation-grid">
