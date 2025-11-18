@@ -18,6 +18,21 @@
     font-size: 4rem;
 }
 
+#gallery-controls {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+#gallery-controls input,
+#gallery-controls select,
+#gallery-controls button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 20px;
+}
+
 #constellation-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

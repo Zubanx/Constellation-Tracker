@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Aries from "../assets/Aries.jpg";
 import Taurus from "../assets/Taurus.jpg";
 import Gemini from "../assets/Gemini.jpg";
@@ -12,11 +13,23 @@ import Aquarius from "../assets/Aquarius.jpg";
 import Pisces from "../assets/Pisces.jpg";
 
 function Gallery() {
+    const navigate = useNavigate();
+
     return(
         <div id="gallery-div">
             <header id="gallery-header">
                 <h1 id="gallery-title" className="primary-text">Gallery</h1>
             </header>
+
+            <div id="gallery-controls">
+                <button
+                    id="to-your-constellations"
+                    className="accent"
+                    onClick={() => navigate("/home")}
+                >
+                    To Your Constellations
+                </button>
+            </div>
 
             <div id="constellation-grids">
                 <h2 className="primary-text">Zodiacs</h2>
