@@ -26,7 +26,7 @@ function Login() {
             }
             else {
                 setMessage("");
-                navigate("/userConstellations");
+                navigate("/home");
             }
         } catch (error) {
             console.error(error);

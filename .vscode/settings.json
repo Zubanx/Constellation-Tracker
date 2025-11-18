@@ -1,3 +1,4 @@
 {
-  "cmake.sourceDirectory": "C:/Code/POOSD/Constellation-Tracker/flutter_frontend/linux/flutter"
+  "cmake.sourceDirectory": "C:/Code/POOSD/Constellation-Tracker/flutter_frontend/linux/flutter",
+  "cmake.ignoreCMakeListsMissing": true
 }

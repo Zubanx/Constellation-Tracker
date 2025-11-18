@@ -5,7 +5,8 @@ import './styles/style.css';
 import LoginPage from './pages/LoginPage';
 import './styles/login-style.css';
 import RegisterPage from './pages/RegisterPage';
-import UserConstellationsPage from './pages/UserConstellations';
+import HomePage from './pages/HomePage';
+import './styles/home-style.css';
 // @ts-expect-error For some reason this import gives an error even though the font exists
 import "@fontsource-variable/inter";
 
@@ -19,8 +20,8 @@ const router = createBrowserRouter([
     element : <RegisterPage/>
   },
   {
-    path : '/userConstellations',
-    element : <UserConstellationsPage/>
+    path : '/home',
+    element : <HomePage/>
   }
 ]);
 
