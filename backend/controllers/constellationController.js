@@ -3,6 +3,7 @@ const { get } = require('mongoose');
 const Observation = require('../models/Observation');
 
 exports.getAll = async (req, res, next) => {
+  
   try {
     const constellations = await Constellation.find();
     res.status(200).json({

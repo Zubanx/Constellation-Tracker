@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const protected = require('./controllers/authController').protect;
+const authProtect = require('./controllers/authController').authProtect;
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -24,11 +24,16 @@ if (process.env.NODE_ENV === 'development') {
         'http://localhost:3000',
         'http://localhost:5173',
         'http://localhost:5174',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:5174',
       ],
-      credentials: false, // were NOT using cookies for Option A
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
     })
   );
-}else{
+} else {
   app.use(
     cors({
       origin: ['https://cop-433121.com'],

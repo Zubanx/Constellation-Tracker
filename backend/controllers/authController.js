@@ -1,7 +1,10 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const sendEmail = require('../utils/email');
+const {
+  sendConfirmationEmail,
+  sendPasswordResetEmail,
+} = require('../utils/email');
 const crypto = require('crypto');
 
 const signToken = (id) => {
@@ -42,7 +45,8 @@ exports.signup = async (req, res, next) => {
     if (!firstName || !lastName || !email || !password || !passwordConfirm) {
       return res.status(400).json({
         status: 'failed',
-        message: 'Please provide first name, last name, email, password, and password confirmation',
+        message:
+          'Please provide first name, last name, email, password, and password confirmation',
       });
     }
 
@@ -52,6 +56,16 @@ exports.signup = async (req, res, next) => {
       .createHash('sha256')
       .update(confirmationToken)
       .digest('hex');
+
+    console.log('🔵 About to create user with data:');
+    console.log('🔵 firstName:', firstName);
+    console.log('🔵 lastName:', lastName);
+    console.log('🔵 email:', email);
+    console.log('🔵 emailConfirmToken:', hashedToken);
+    console.log(
+      '🔵 emailConfirmExpires:',
+      new Date(Date.now() + 24 * 60 * 60 * 1000)
+    );
 
     const newUser = await User.create({
       firstName,
@@ -64,9 +78,15 @@ exports.signup = async (req, res, next) => {
       emailConfirmExpires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
 
-    // Send confirmation email
+    // Send confirmation email - FIXED: Pass firstName and unhashed token
     try {
-      await sendEmail.confirmationEmail(email, confirmationToken);
+      await sendConfirmationEmail(
+        email,
+        firstName,
+        confirmationToken // Send unhashed token
+      );
+
+      console.log(`✅ Confirmation email sent to: ${email}`);
     } catch (emailErr) {
       console.error('Failed to send confirmation email:', emailErr);
       // Optionally delete user if email fails (security)
@@ -84,6 +104,7 @@ exports.signup = async (req, res, next) => {
         'Registration successful! Please check your email to confirm your account.',
     });
   } catch (error) {
+    console.error('Signup error:', error);
     res.status(400).json({
       status: 'failed',
       message: error.message || 'Something went wrong during signup',
@@ -93,6 +114,7 @@ exports.signup = async (req, res, next) => {
 
 exports.confirmEmail = async (req, res, next) => {
   try {
+    // Hash the token from URL to compare with database
     const hashedToken = crypto
       .createHash('sha256')
       .update(req.params.token)
@@ -110,16 +132,90 @@ exports.confirmEmail = async (req, res, next) => {
       });
     }
 
+    // Mark email as confirmed
     user.emailConfirmed = true;
     user.emailConfirmToken = undefined;
     user.emailConfirmExpires = undefined;
     await user.save({ validateBeforeSave: false });
 
+    console.log(`✅ Email confirmed for user: ${user.email}`);
+
+    // Send token for automatic login
     createSendToken(user, 200, res);
   } catch (error) {
+    console.error('Email confirmation error:', error);
     res.status(500).json({
       status: 'failed',
       message: 'Server error during email confirmation',
+    });
+  }
+};
+
+exports.resendConfirmation = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Please provide your email address',
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+    if (!user) {
+      // Don't reveal if email exists
+      return res.status(200).json({
+        status: 'success',
+        message: 'If an account exists, a confirmation email has been sent.',
+      });
+    }
+
+    if (user.emailConfirmed) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Email is already confirmed',
+      });
+    }
+
+    // Generate new confirmation token
+    const confirmationToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(confirmationToken)
+      .digest('hex');
+
+    user.emailConfirmToken = hashedToken;
+    user.emailConfirmExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    await user.save({ validateBeforeSave: false });
+
+    // Send confirmation email
+    try {
+      await sendConfirmationEmail(
+        user.email,
+        user.firstName,
+        confirmationToken
+      );
+
+      console.log(`✅ Confirmation email resent to: ${user.email}`);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Confirmation email sent!',
+      });
+    } catch (emailErr) {
+      console.error('Failed to resend confirmation email:', emailErr);
+      return res.status(500).json({
+        status: 'failed',
+        message: 'There was an error sending the email. Try again later!',
+      });
+    }
+  } catch (error) {
+    console.error('Resend confirmation error:', error);
+    res.status(500).json({
+      status: 'failed',
+      message: 'Server error',
     });
   }
 };
@@ -151,7 +247,9 @@ exports.login = async (req, res, next) => {
   if (!user.emailConfirmed) {
     return res.status(401).json({
       status: 'failed',
-      message: 'Please confirm your email before logging in',
+      message:
+        'Please confirm your email before logging in. Check your inbox or request a new confirmation email.',
+      requiresConfirmation: true,
     });
   }
 
@@ -159,7 +257,7 @@ exports.login = async (req, res, next) => {
   createSendToken(user, 200, res);
 };
 
-exports.protect = async (req, res, next) => {
+exports.authProtect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization?.startsWith('Bearer')) {
@@ -200,6 +298,7 @@ exports.protect = async (req, res, next) => {
     req.user = currentUser;
     next();
   } catch (err) {
+    console.error('Token verification error:', err);
     return res.status(401).json({
       status: 'failed',
       message: 'Invalid or expired token',
@@ -221,22 +320,44 @@ exports.forgotPassword = async (req, res, next) => {
     const user = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!user) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'There is no user with that email address',
+      // Don't reveal if user exists (security)
+      return res.status(200).json({
+        status: 'success',
+        message:
+          'If an account exists with that email, a password reset link has been sent.',
       });
     }
 
-    const resetToken = user.createPasswordResetToken();
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = Date.now() + 3600000; // 1 hour
     await user.save({ validateBeforeSave: false });
 
+    // Send password reset email - FIXED: Pass firstName and unhashed token
     try {
-      await sendEmail.passwordResetEmail(user.email, resetToken);
+      await sendPasswordResetEmail(
+        user.email,
+        user.firstName,
+        resetToken // Send unhashed token
+      );
+
+      console.log(`✅ Password reset email sent to: ${user.email}`);
+
       res.status(200).json({
         status: 'success',
-        message: 'Password reset link sent to your email',
+        message:
+          'If an account exists with that email, a password reset link has been sent.',
       });
     } catch (emailErr) {
+      console.error('Failed to send password reset email:', emailErr);
+
+      // Clear reset token if email fails
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
       await user.save({ validateBeforeSave: false });
@@ -247,6 +368,7 @@ exports.forgotPassword = async (req, res, next) => {
       });
     }
   } catch (err) {
+    console.error('Forgot password error:', err);
     res.status(500).json({
       status: 'failed',
       message: 'Server error',
@@ -256,6 +378,7 @@ exports.forgotPassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
+    // Hash the token from URL to compare with database
     const hashedToken = crypto
       .createHash('sha256')
       .update(req.params.token)
@@ -273,6 +396,7 @@ exports.resetPassword = async (req, res, next) => {
       });
     }
 
+    // Update password
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     user.passwordResetToken = undefined;
@@ -280,8 +404,12 @@ exports.resetPassword = async (req, res, next) => {
 
     await user.save();
 
+    console.log(`✅ Password reset successful for user: ${user.email}`);
+
+    // Log user in with new password
     createSendToken(user, 200, res);
   } catch (err) {
+    console.error('Reset password error:', err);
     res.status(400).json({
       status: 'failed',
       message: err.message || 'Password reset failed',
@@ -293,6 +421,14 @@ exports.updatePassword = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select('+password');
 
+    if (!user) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    // Check if current password is correct
     if (
       !(await user.correctPassword(req.body.currentPassword, user.password))
     ) {
@@ -302,15 +438,20 @@ exports.updatePassword = async (req, res, next) => {
       });
     }
 
+    // Update password
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
 
+    // Log user in with new password
     createSendToken(user, 200, res);
   } catch (err) {
+    console.error('Update password error:', err);
     res.status(400).json({
       status: 'failed',
       message: err.message || 'Could not update password',
     });
   }
 };
+
+module.exports = exports;

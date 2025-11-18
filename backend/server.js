@@ -13,7 +13,7 @@ async function connectDB() {
       console.error('DB_URL environment variable is not defined');
       process.exit(1);
     }
-    await mongoose.connect(DB_URL, { dbName: 'mernAuthDB' });
+    await mongoose.connect(DB_URL, { dbName: 'authMernDB' });
     console.log('Connected to Database');
   } catch (error) {
     console.error('Database connection error:', error);

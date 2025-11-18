@@ -1,13 +1,13 @@
 const express = require('express');
 const observationController = require('../controllers/observationController');
-const protected = require('../controllers/authController').protect;
+const authProtect = require('../controllers/authController').authProtect;
 
 const router = express.Router();
 
-router.post('/', protected, observationController.addObservation);
-router.patch('/:id', protected, observationController.updateObservation);
-router.delete('/:id', protected, observationController.deleteObservation);
-router.get('/', protected, observationController.getAllObservations);
-router.get('/:id', protected, observationController.getObservation);
+router.post('/', authProtect, observationController.addObservation);
+router.patch('/:id', authProtect, observationController.updateObservation);
+router.delete('/:id', authProtect, observationController.deleteObservation);
+router.get('/', authProtect, observationController.getAllObservations);
+router.get('/:id', authProtect, observationController.getObservation);
 
 module.exports = router;

@@ -8,7 +8,11 @@ router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
-router.patch('/updatePassword', authController.protect,authController.updatePassword);
-router.get('/confirmEmail/:token', authController.confirmEmail)
+router.patch(
+  '/updatePassword',
+  authController.authProtect,
+  authController.updatePassword
+);
+router.get('/confirm-email/:token', authController.confirmEmail);
 
 module.exports = router;
