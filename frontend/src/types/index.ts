@@ -124,24 +124,6 @@ export interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
-// AWS Cognito types
-export interface CognitoUser {
-  username: string;
-  pool: unknown;
-  Session: string | null;
-  client: unknown;
-  signInUserSession: unknown;
-  authenticationFlowType: string;
-  storage: unknown;
-  keyPrefix: string;
-  userDataKey: string;
-}
-
-export interface CognitoAuthResult {
-  accessToken: string;
-  idToken: string;
-  refreshToken: string;
-}
 
 // Filter and sort types
 export interface ConstellationFilters {

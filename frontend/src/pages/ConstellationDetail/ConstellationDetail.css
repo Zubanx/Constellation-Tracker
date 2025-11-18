@@ -5,9 +5,10 @@
   min-height: 100vh;
   background: linear-gradient(to bottom, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
   color: #ffffff;
+  overflow-x: hidden;
 }
 
-/* Starfield background */
+/* Starfield - Same as Dashboard and Observations */
 .constellation-detail-container .stars,
 .constellation-detail-container .stars2,
 .constellation-detail-container .stars3 {
@@ -17,54 +18,51 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 0;
 }
 
-/* .constellation-detail-container .stars {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><circle cx="1" cy="1" r="1" fill="white" opacity="0.8"/></svg>') repeat;
-  animation: animateStars 100s linear infinite;
+.constellation-detail-container .stars {
+  background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 60px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 50px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: animateStars 80s linear infinite;
+  opacity: 0.9;
 }
 
 .constellation-detail-container .stars2 {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="3" height="3"><circle cx="1.5" cy="1.5" r="1" fill="white" opacity="0.5"/></svg>') repeat;
-  animation: animateStars 150s linear infinite;
+  background: radial-gradient(1px 1px at 40px 60px, white, transparent),
+    radial-gradient(1px 1px at 110px 90px, white, transparent),
+    radial-gradient(1px 1px at 170px 30px, white, transparent);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: animateStars 120s linear infinite;
+  opacity: 0.6;
 }
 
 .constellation-detail-container .stars3 {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="1.5" fill="white" opacity="0.3"/></svg>') repeat;
-  animation: animateStars 200s linear infinite;
-} */
+  background: radial-gradient(2px 2px at 75px 125px, white, transparent),
+    radial-gradient(2px 2px at 150px 75px, white, transparent);
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: animateStars 180s linear infinite;
+  opacity: 0.4;
+}
 
 @keyframes animateStars {
   from {
-    transform: translateY(0);
+    background-position: 0 0;
   }
   to {
-    transform: translateY(-2000px);
+    background-position: 10000px 10000px;
   }
-}
-
-/* Back Button */
-.constellation-detail-container .btn-outline-light {
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 10;
-}
-
-.constellation-detail-container .btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #ffffff;
-  color: #ffffff;
 }
 
 /* Header */
 .detail-header {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
   position: relative;
   z-index: 10;
 }
@@ -72,7 +70,7 @@
 .constellation-title {
   font-size: 3rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, #FFD700 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ffd700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -81,54 +79,53 @@
 
 .constellation-latin {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-style: italic;
   margin-bottom: 0;
 }
 
 .constellation-badge {
-  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
-  color: #ffffff;
-  padding: 0.5rem 1.5rem;
-  border-radius: 25px;
-  font-size: 1.25rem;
-  font-weight: 700;
   display: inline-block;
+  background: rgba(65, 88, 208, 0.3);
+  color: #ffd700;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 2px solid rgba(65, 88, 208, 0.5);
+  letter-spacing: 2px;
 }
 
 /* Tabs */
 .detail-tabs {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 0.5rem;
   display: flex;
-  gap: 0.5rem;
-  backdrop-filter: blur(10px);
+  gap: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   position: relative;
   z-index: 10;
 }
 
 .tab-button {
-  flex: 1;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 1rem 2rem;
+  font-size: 1rem;
   font-weight: 600;
-  transition: all 0.3s ease;
   cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  bottom: -2px;
 }
 
 .tab-button:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .tab-button.active {
-  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
-  color: #ffffff;
+  color: #ffd700;
+  border-bottom-color: #ffd700;
 }
 
 /* Info Cards */
@@ -138,33 +135,39 @@
   border-radius: 15px;
   padding: 2rem;
   backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
   position: relative;
   z-index: 10;
-  margin-bottom: 1.5rem;
+}
+
+.info-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(65, 88, 208, 0.3);
 }
 
 .card-title {
-  font-size: 1.5rem;
+  color: #ffd700;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #FFD700;
   margin-bottom: 1.5rem;
 }
 
 .card-text {
   color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
   line-height: 1.8;
-  font-size: 1.05rem;
 }
 
-/* Sidebar Card */
+/* Quick Facts Sidebar */
 .sidebar-card {
   position: sticky;
-  top: 20px;
+  top: 2rem;
 }
 
 .fact-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -174,37 +177,15 @@
 }
 
 .fact-label {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
   font-size: 0.95rem;
 }
 
 .fact-value {
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 700;
   text-align: right;
-}
-
-/* Border Tags */
-.border-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.border-tag {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.border-tag:hover {
-  background: rgba(65, 88, 208, 0.2);
-  border-color: #4158D0;
 }
 
 /* Observations List */
@@ -215,7 +196,7 @@
 }
 
 .observation-item {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1.5rem;
@@ -223,50 +204,63 @@
 }
 
 .observation-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: #4158D0;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(65, 88, 208, 0.5);
+  transform: translateY(-2px);
 }
 
 .observation-header {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   margin-bottom: 1rem;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
 .observation-date {
-  font-size: 1.1rem;
+  color: #ffd700;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .observation-location {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   margin-bottom: 0;
 }
 
-.observation-rating {
-  display: flex;
-  gap: 2px;
-}
-
-.star {
-  color: rgba(255, 255, 255, 0.2);
-  font-size: 1.25rem;
-}
-
-.star.filled {
-  color: #FFD700;
+.location-icon {
+  margin-right: 0.25rem;
 }
 
 .observation-notes {
   color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border-left: 3px solid rgba(65, 88, 208, 0.5);
+}
+
+.observation-photo {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.observation-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.observation-item:hover .observation-photo img {
+  transform: scale(1.02);
 }
 
 .observation-actions {
@@ -275,8 +269,8 @@
 }
 
 /* Buttons */
-.constellation-detail-container .btn-primary {
-  background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+.btn-primary {
+  background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
   border: none;
   padding: 0.75rem 2rem;
   font-weight: 600;
@@ -285,79 +279,61 @@
   z-index: 10;
 }
 
-.constellation-detail-container .btn-primary:hover {
+.btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 20px rgba(65, 88, 208, 0.4);
 }
 
-.constellation-detail-container .btn-outline-primary {
-  border: 2px solid #4158D0;
-  color: #4158D0;
-  background: transparent;
+.btn-outline-light {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
 }
 
-.constellation-detail-container .btn-outline-primary:hover {
-  background: #4158D0;
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
   color: #ffffff;
 }
 
-/* Loading State */
-.constellation-detail-container .spinner-border {
-  width: 3rem;
-  height: 3rem;
+.btn-outline-primary {
+  color: #4158d0;
+  border-color: #4158d0;
+  background: rgba(65, 88, 208, 0.1);
+  transition: all 0.3s ease;
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-  .constellation-title {
-    font-size: 2.5rem;
-  }
-  
-  .sidebar-card {
-    position: static;
-  }
+.btn-outline-primary:hover {
+  background: #4158d0;
+  border-color: #4158d0;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .constellation-title {
     font-size: 2rem;
   }
-  
-  .constellation-latin {
-    font-size: 1.1rem;
-  }
-  
+
   .constellation-badge {
-    padding: 0.4rem 1rem;
     font-size: 1rem;
+    padding: 0.5rem 1rem;
   }
-  
-  .detail-header {
-    padding: 1.5rem;
+
+  .tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
-  
-  .info-card {
-    padding: 1.5rem;
+
+  .sidebar-card {
+    position: static;
+    margin-top: 2rem;
   }
-  
-  .card-title {
-    font-size: 1.25rem;
-  }
-  
+
   .observation-header {
     flex-direction: column;
-  }
-  
-  .observation-rating {
-    align-self: flex-start;
-  }
-  
-  .detail-tabs {
-    flex-direction: column;
-  }
-  
-  .tab-button {
-    width: 100%;
   }
 }

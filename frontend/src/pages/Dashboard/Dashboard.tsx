@@ -1,7 +1,8 @@
-import React, { useState, useEffect, JSX } from 'react';
-import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './Dashboard.css';
+import React, { useState, useEffect} from "react";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./Dashboard.css";
+import observationService, { Observation } from "../../services/observationService";
 
 interface UserStats {
   totalObservations: number;
@@ -10,79 +11,81 @@ interface UserStats {
   lastObservationDate: string;
 }
 
-interface RecentObservation {
-  id: string;
-  constellationName: string;
-  date: string;
-  location: string;
-  rating: number;
-}
+const getToken = (): string | null => {
+  return localStorage.getItem('token');
+};
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<UserStats>({
     totalObservations: 0,
     constellationsTracked: 0,
-    favoriteConstellation: 'Loading...',
-    lastObservationDate: 'N/A'
+    favoriteConstellation: "Loading...",
+    lastObservationDate: "N/A",
   });
 
-  const [recentObservations, setRecentObservations] = useState<RecentObservation[]>([]);
+  const [recentObservations, setRecentObservations] = useState<Observation[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
   const fetchDashboardData = async (): Promise<void> => {
+    const token = getToken();
+    if (!token) {
+      setError('Authentication required');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Simulate API call - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsLoading(true);
 
-      // Mock data
-      setStats({
-        totalObservations: 42,
-        constellationsTracked: 15,
-        favoriteConstellation: 'Orion',
-        lastObservationDate: '2024-11-15'
-      });
+      // Fetch recent observations (last 5)
+      const observations = await observationService.getRecentObservations(token, 5);
+      setRecentObservations(observations);
 
-      setRecentObservations([
-        {
-          id: '1',
-          constellationName: 'Orion',
-          date: '2024-11-15',
-          location: 'Orlando, FL',
-          rating: 5
-        },
-        {
-          id: '2',
-          constellationName: 'Ursa Major',
-          date: '2024-11-12',
-          location: 'Orlando, FL',
-          rating: 4
-        },
-        {
-          id: '3',
-          constellationName: 'Cassiopeia',
-          date: '2024-11-10',
-          location: 'Orlando, FL',
-          rating: 5
-        }
-      ]);
+      // Calculate stats from observations
+      if (observations.length > 0) {
+        // Get unique constellations
+        const uniqueConstellations = new Set(
+          observations.map(obs => obs.constellationId._id)
+        );
+
+        // Find favorite constellation (most observed)
+        const constellationCounts: { [key: string]: { name: string; count: number } } = {};
+        observations.forEach(obs => {
+          const id = obs.constellationId._id;
+          const name = obs.constellationId.name;
+          if (constellationCounts[id]) {
+            constellationCounts[id].count++;
+          } else {
+            constellationCounts[id] = { name, count: 1 };
+          }
+        });
+
+        const favoriteConst = Object.values(constellationCounts).reduce((max, current) =>
+          current.count > max.count ? current : max
+        );
+
+        // Get last observation date
+        const lastDate = observations[0].observationDate; // Already sorted by date (desc)
+
+        setStats({
+          totalObservations: observations.length,
+          constellationsTracked: uniqueConstellations.size,
+          favoriteConstellation: favoriteConst.name,
+          lastObservationDate: lastDate,
+        });
+      }
 
       setIsLoading(false);
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error("Error fetching dashboard data:", error);
+      setError("Failed to load dashboard data");
       setIsLoading(false);
     }
-  };
-
-  const renderStars = (rating: number): JSX.Element[] => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <span key={index} className={index < rating ? 'star filled' : 'star'}>
-        ★
-      </span>
-    ));
   };
 
   if (isLoading) {
@@ -110,9 +113,18 @@ const Dashboard: React.FC = () => {
         <div className="row mb-4">
           <div className="col-12">
             <h1 className="dashboard-title">Welcome Back, Stargazer!</h1>
-            <p className="dashboard-subtitle">Here's a summary of your celestial journey</p>
+            <p className="dashboard-subtitle">
+              Here's a summary of your celestial journey
+            </p>
           </div>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="row g-4 mb-5">
@@ -143,7 +155,11 @@ const Dashboard: React.FC = () => {
           <div className="col-md-6 col-lg-3">
             <div className="stat-card">
               <div className="stat-icon">📅</div>
-              <div className="stat-value">{new Date(stats.lastObservationDate).toLocaleDateString()}</div>
+              <div className="stat-value">
+                {stats.lastObservationDate !== "N/A"
+                  ? new Date(stats.lastObservationDate).toLocaleDateString()
+                  : "N/A"}
+              </div>
               <div className="stat-label">Last Observation</div>
             </div>
           </div>
@@ -155,22 +171,16 @@ const Dashboard: React.FC = () => {
             <div className="quick-actions-card">
               <h3 className="section-heading mb-4">Quick Actions</h3>
               <div className="row g-3">
-                <div className="col-md-4">
+                <div className="col-md-6">
                   <Link to="/constellations" className="action-btn">
                     <span className="action-icon">🔭</span>
                     <span className="action-text">Browse Constellations</span>
                   </Link>
                 </div>
-                <div className="col-md-4">
-                  <Link to="/constellations/new-observation" className="action-btn">
+                <div className="col-md-6">
+                  <Link to="/observations/new" className="action-btn">
                     <span className="action-icon">➕</span>
                     <span className="action-text">Log Observation</span>
-                  </Link>
-                </div>
-                <div className="col-md-4">
-                  <Link to="/profile" className="action-btn">
-                    <span className="action-icon">👤</span>
-                    <span className="action-text">View Profile</span>
                   </Link>
                 </div>
               </div>
@@ -184,16 +194,21 @@ const Dashboard: React.FC = () => {
             <div className="recent-observations-card">
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="section-heading mb-0">Recent Observations</h3>
-                <Link to="/observations" className="btn btn-sm btn-outline-light">
+                <Link
+                  to="/observations"
+                  className="btn btn-sm btn-outline-light"
+                >
                   View All
                 </Link>
               </div>
 
               {recentObservations.length === 0 ? (
                 <div className="text-center py-5">
-                  <p className="text-muted">No observations yet. Start tracking constellations!</p>
-                  <Link to="/constellations" className="btn btn-primary mt-3">
-                    Explore Constellations
+                  <p className="text-muted">
+                    No observations yet. Start tracking constellations!
+                  </p>
+                  <Link to="/observations/new" className="btn btn-primary mt-3">
+                    Log Your First Observation
                   </Link>
                 </div>
               ) : (
@@ -204,26 +219,25 @@ const Dashboard: React.FC = () => {
                         <th>Constellation</th>
                         <th>Date</th>
                         <th>Location</th>
-                        <th>Rating</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {recentObservations.map((observation) => (
-                        <tr key={observation.id}>
+                        <tr key={observation._id}>
                           <td>
-                            <strong>{observation.constellationName}</strong>
+                            <strong>{observation.constellationId.name}</strong>
+                            <span className="constellation-abbr ms-2">
+                              {observation.constellationId.abbreviation}
+                            </span>
                           </td>
-                          <td>{new Date(observation.date).toLocaleDateString()}</td>
+                          <td>
+                            {new Date(observation.observationDate).toLocaleDateString()}
+                          </td>
                           <td>{observation.location}</td>
                           <td>
-                            <div className="rating">
-                              {renderStars(observation.rating)}
-                            </div>
-                          </td>
-                          <td>
-                            <Link 
-                              to={`/observations/${observation.id}`}
+                            <Link
+                              to={`/observations/${observation._id}`}
                               className="btn btn-sm btn-outline-primary"
                             >
                               View
@@ -249,19 +263,22 @@ const Dashboard: React.FC = () => {
                   <span>Constellations Discovered</span>
                   <span>{stats.constellationsTracked}/88</span>
                 </div>
-                <div className="progress" style={{ height: '10px' }}>
-                  <div 
-                    className="progress-bar" 
-                    role="progressbar" 
-                    style={{ width: `${(stats.constellationsTracked / 88) * 100}%` }}
-                    aria-valuenow={stats.constellationsTracked} 
-                    aria-valuemin={0} 
+                <div className="progress" style={{ height: "10px" }}>
+                  <div
+                    className="progress-bar"
+                    role="progressbar"
+                    style={{
+                      width: `${(stats.constellationsTracked / 88) * 100}%`,
+                    }}
+                    aria-valuenow={stats.constellationsTracked}
+                    aria-valuemin={0}
                     aria-valuemax={88}
                   ></div>
                 </div>
               </div>
               <p className="text-muted mb-0">
-                Keep exploring! You've tracked {stats.constellationsTracked} out of 88 recognized constellations.
+                Keep exploring! You've tracked {stats.constellationsTracked} out
+                of 88 recognized constellations.
               </p>
             </div>
           </div>

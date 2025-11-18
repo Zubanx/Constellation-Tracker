@@ -1,6 +1,6 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext"; // Adjust path as needed
+import { useAuth } from "../../context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Register.css";
 
@@ -23,7 +23,7 @@ interface FormErrors {
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { register, user, isAuthenticated } = useAuth(); // ← From your context
+  const { register, user, isAuthenticated } = useAuth();
 
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: "",
@@ -34,7 +34,6 @@ const Register: React.FC = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [acceptTerms, setAcceptTerms] = useState<boolean>(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,8 +47,13 @@ const Register: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+    
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -67,10 +71,6 @@ const Register: React.FC = () => {
 
     if (formData.confirmPassword !== formData.password) {
       newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    if (!acceptTerms) {
-      newErrors.general = "You must accept the terms and conditions";
     }
 
     setErrors(newErrors);
@@ -93,14 +93,36 @@ const Register: React.FC = () => {
         passwordConfirm: formData.confirmPassword,
       });
 
-      // Success!
-      alert("Account created successfully! Please check your email to confirm your account.");
-      navigate("/login");
+      // Success! Redirect to email sent page instead of showing alert
+      navigate("/email-sent", { 
+        state: { 
+          email: formData.email.toLowerCase().trim() 
+        } 
+      });
     } catch (err: any) {
       console.error("Registration failed:", err);
-      setErrors({
-        general: err.message || "Registration failed. Please try again.",
-      });
+      
+      // Check for specific error messages
+      const errorMessage = err.message || "Registration failed. Please try again.";
+      
+      // Handle email already exists error
+      if (errorMessage.toLowerCase().includes("email") && 
+          (errorMessage.toLowerCase().includes("already") || 
+           errorMessage.toLowerCase().includes("exists") ||
+           errorMessage.toLowerCase().includes("registered"))) {
+        setErrors({
+          email: "This email is already registered. Please use a different email or try logging in.",
+        });
+      } else if (errorMessage.toLowerCase().includes("duplicate") && 
+                 errorMessage.toLowerCase().includes("email")) {
+        setErrors({
+          email: "This email is already registered. Please use a different email or try logging in.",
+        });
+      } else {
+        setErrors({
+          general: errorMessage,
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -146,6 +168,7 @@ const Register: React.FC = () => {
                   </div>
                 )}
 
+                {/* General error message */}
                 {errors.general && (
                   <div className="alert alert-danger alert-dismissible fade show" role="alert">
                     {errors.general}
@@ -213,42 +236,30 @@ const Register: React.FC = () => {
                       className={`form-control ${errors.password ? "is-invalid" : ""}`}
                       id="password"
                       name="password"
+                      placeholder="Enter a strong password"
                       value={formData.password}
                       onChange={handleInputChange}
                       disabled={isLoading}
                     />
                     {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                     <small className="form-text text-muted">
-                      8+ characters with uppercase, lowercase, and number
+                      Must be 8+ characters with uppercase, lowercase, and a number
                     </small>
                   </div>
 
-                  <div className="mb-3">
+                  <div className="mb-4">
                     <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
                     <input
                       type="password"
                       className={`form-control ${errors.confirmPassword ? "is-invalid" : ""}`}
                       id="confirmPassword"
                       name="confirmPassword"
+                      placeholder="Re-enter your password"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       disabled={isLoading}
                     />
                     {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
-                  </div>
-
-                  <div className="mb-3 form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="acceptTerms"
-                      checked={acceptTerms}
-                      onChange={(e) => setAcceptTerms(e.target.checked)}
-                      disabled={isLoading}
-                    />
-                    <label className="form-check-label" htmlFor="acceptTerms">
-                      I agree to the <a href="/terms" className="text-decoration-none">Terms and Conditions</a>
-                    </label>
                   </div>
 
                   <button
@@ -271,7 +282,7 @@ const Register: React.FC = () => {
                 <div className="text-center">
                   <p className="mb-0 small text-muted">
                     Already have an account?{" "}
-                    <Link to="/login" className="text-decoration-none">
+                    <Link to="/login" className="text-decoration-none fw-semibold">
                       Sign in
                     </Link>
                   </p>

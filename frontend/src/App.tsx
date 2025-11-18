@@ -10,8 +10,11 @@ import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Constellations from "./pages/Constellations/Constellations";
-import Observations from "./pages/Observations/Observations";
+import ObservationsList from "./pages/Observations/Observations"; 
+import NewObservation from "./pages/NewObservations/NewObservations"; 
 import ConstellationDetail from "./pages/ConstellationDetail/ConstellationDetail";
+import ConfirmEmail from "./pages/ConfirmEmail/ConfirmEmail";
+import EmailSent from "./pages/EmailSent/EmailSent";
 // import Profile from "./pages/Profile/Profile";
 // import NotFound from "./pages/NotFound/NotFound";
 
@@ -42,6 +45,10 @@ const App: React.FC = () => {
             />
             <Route path="/register" element={<Register />} />
 
+            {/* Email Confirmation Routes - Public (no auth required) */}
+            <Route path="/confirm-email" element={<ConfirmEmail />} />
+            <Route path="/email-sent" element={<EmailSent />} />
+
             {/* Protected Routes - require authentication */}
             <Route
               path="/dashboard"
@@ -51,22 +58,39 @@ const App: React.FC = () => {
                 </PrivateRoute>
               }
             />
+
+            {/* Observations Routes */}
+            {/* List all observations */}
             <Route
-              path="/observations/"
+              path="/observations"
               element={
                 <PrivateRoute>
-                  <Observations />
+                  <ObservationsList />
                 </PrivateRoute>
               }
             />
+
+            {/* Add new observation - accessed from Dashboard "Log Observation" button */}
+            <Route
+              path="/observations/new"
+              element={
+                <PrivateRoute>
+                  <NewObservation />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Add observation for specific constellation */}
             <Route
               path="/constellations/:id/add-observation"
               element={
                 <PrivateRoute>
-                  <Observations />
+                  <NewObservation />
                 </PrivateRoute>
               }
             />
+
+            {/* Constellations Routes */}
             <Route
               path="/constellations"
               element={
@@ -83,6 +107,8 @@ const App: React.FC = () => {
                 </PrivateRoute>
               }
             />
+
+            {/* Profile Route (commented out) */}
             {/* <Route
               path="/profile"
               element={

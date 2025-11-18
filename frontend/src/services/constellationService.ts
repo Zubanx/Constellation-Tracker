@@ -1,10 +1,10 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = "http://localhost:3000/api";
 
 export interface Constellation {
   _id: string;
   name: string;
   abbreviation: string;
-  hemisphere: 'Northern' | 'Southern' | 'Both';
+  hemisphere: "Northern" | "Southern" | "Both";
   rightAscension: string;
   declination: string;
   quadrant: string;
@@ -18,37 +18,43 @@ export interface Constellation {
 }
 
 export interface ConstellationsResponse {
-  constellations: Constellation[];
+  status: string;
+  data: {
+    constellations: Constellation[];
+  };
 }
-
 export const constellationService = {
-  getAllConstellations: async (token: string): Promise<ConstellationsResponse> => {
-    const response = await fetch(`${API_URL}/constellations`, {
-      method: 'GET',
+  getAllConstellations: async (
+    token: string
+  ): Promise<ConstellationsResponse> => {
+    const response = await fetch(`${API_URL}/constellations/`, {
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch constellations');
+      throw new Error("Failed to fetch constellations");
     }
-
     return response.json();
   },
 
-  getConstellation: async (token: string, id: string): Promise<{ constellation: Constellation }> => {
+  getConstellation: async (
+    token: string,
+    id: string
+  ): Promise<{ constellation: Constellation }> => {
     const response = await fetch(`${API_URL}/constellations/${id}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch constellation');
+      throw new Error("Failed to fetch constellation");
     }
 
     return response.json();

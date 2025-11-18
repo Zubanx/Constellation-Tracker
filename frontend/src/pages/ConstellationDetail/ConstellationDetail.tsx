@@ -1,10 +1,11 @@
-import React, { useState, useEffect, JSX } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ConstellationDetail.css';
+import observationService, { Observation } from '../../services/observationService';
 
 interface ConstellationDetailType {
-  id: string;
+  _id: string;
   name: string;
   latinName: string;
   abbreviation: string;
@@ -17,16 +18,11 @@ interface ConstellationDetailType {
   description: string;
   mythology: string;
   numberOfStars: number;
-  // borderConstellations removed
 }
 
-interface Observation {
-  id: string;
-  date: string;
-  location: string;
-  rating: number;
-  notes: string;
-}
+const getToken = (): string | null => {
+  return localStorage.getItem('token');
+};
 
 const ConstellationDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,11 +30,14 @@ const ConstellationDetail: React.FC = () => {
   const [constellation, setConstellation] = useState<ConstellationDetailType | null>(null);
   const [observations, setObservations] = useState<Observation[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'info' | 'observations'>('info');
 
   useEffect(() => {
-    fetchConstellationDetail();
-    fetchObservations();
+    if (id) {
+      fetchConstellationDetail();
+      fetchObservations();
+    }
   }, [id]);
 
   const fetchConstellationDetail = async (): Promise<void> => {
@@ -56,43 +55,31 @@ const ConstellationDetail: React.FC = () => {
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching constellation details:', error);
+      setError('Failed to load constellation details');
       setIsLoading(false);
     }
   };
 
   const fetchObservations = async (): Promise<void> => {
+    const token = getToken();
+    if (!token) {
+      // User not logged in, skip fetching observations
+      return;
+    }
+
+    if (!id) return;
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const mockObservations: Observation[] = [
-        {
-          id: '1',
-          date: '2024-11-15',
-          location: 'Orlando, FL',
-          rating: 5,
-          notes: 'Clear sky, perfect visibility. Orion\'s Belt was stunning.'
-        },
-        {
-          id: '2',
-          date: '2024-01-20',
-          location: 'Orlando, FL',
-          rating: 4,
-          notes: 'Some light pollution but still very visible.'
-        }
-      ];
-
-      setObservations(mockObservations);
+      const response = await observationService.getObservationsByConstellation(token, id);
+      setObservations(response.data.observations);
     } catch (error) {
       console.error('Error fetching observations:', error);
+      // Don't set error here - observations are optional
     }
   };
 
-  const renderStars = (rating: number): JSX.Element[] => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} className={i < rating ? 'star filled' : 'star'}>
-        ★
-      </span>
-    ));
+  const handleLogObservation = () => {
+    navigate(`/constellations/${id}/add-observation`);
   };
 
   if (isLoading) {
@@ -135,6 +122,13 @@ const ConstellationDetail: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
 
         {/* Header */}
         <div className="row mb-5">
@@ -186,7 +180,6 @@ const ConstellationDetail: React.FC = () => {
                 <h3 className="card-title">Mythology</h3>
                 <p className="card-text">{constellation.mythology || 'No mythology recorded.'}</p>
               </div>
-              {/* Bordering Constellations section completely removed */}
             </div>
 
             {/* Sidebar - Quick Facts */}
@@ -223,7 +216,10 @@ const ConstellationDetail: React.FC = () => {
                 </div>
               </div>
 
-              <button className="btn btn-primary w-100 mt-3">
+              <button 
+                className="btn btn-primary w-100 mt-3"
+                onClick={handleLogObservation}
+              >
                 Log Observation
               </button>
             </div>
@@ -241,29 +237,49 @@ const ConstellationDetail: React.FC = () => {
                     <p className="text-muted mb-4">
                       Start tracking your observations of {constellation.name}
                     </p>
-                    <button className="btn btn-primary">Log Your First Observation</button>
+                    <button 
+                      className="btn btn-primary"
+                      onClick={handleLogObservation}
+                    >
+                      Log Your First Observation
+                    </button>
                   </div>
                 ) : (
                   <div className="observations-list">
                     {observations.map((obs) => (
-                      <div key={obs.id} className="observation-item">
+                      <div key={obs._id} className="observation-item">
                         <div className="observation-header">
                           <div>
                             <h5 className="observation-date">
-                              {new Date(obs.date).toLocaleDateString('en-US', {
+                              {new Date(obs.observationDate).toLocaleDateString('en-US', {
                                 weekday: 'long',
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
                               })}
                             </h5>
-                            <p className="observation-location">Location: {obs.location}</p>
+                            <p className="observation-location">
+                              <span className="location-icon">📍</span> {obs.location}
+                            </p>
                           </div>
-                          <div className="observation-rating">{renderStars(obs.rating)}</div>
                         </div>
-                        <p className="observation-notes">{obs.notes}</p>
+                        {obs.notes && (
+                          <p className="observation-notes">{obs.notes}</p>
+                        )}
+                        {obs.photoUrl && (
+                          <div className="observation-photo mb-3">
+                            <img 
+                              src={obs.photoUrl} 
+                              alt={`Observation of ${constellation.name}`}
+                              className="img-fluid rounded"
+                            />
+                          </div>
+                        )}
                         <div className="observation-actions">
-                          <Link to={`/observations/${obs.id}`} className="btn btn-sm btn-outline-primary">
+                          <Link 
+                            to={`/observations/${obs._id}`} 
+                            className="btn btn-sm btn-outline-primary"
+                          >
                             View Details
                           </Link>
                         </div>

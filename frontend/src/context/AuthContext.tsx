@@ -141,15 +141,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         );
       }
 
-      // Backend returns success message - user needs to confirm email
-      // Don't automatically log in, redirect to a confirmation page or show message
-      alert(
-        data.message ||
-          "Registration successful! Please check your email to confirm your account."
-      );
-
-      // Navigate to login page
-      navigate("/login");
+      // ✅ SUCCESS - Don't navigate here, let Register component handle it
+      // The Register component will navigate to /email-sent
+      
+      // Don't show alert anymore - Register component handles the redirect
+      
     } catch (error: any) {
       console.error("Registration error:", error);
       throw new Error(

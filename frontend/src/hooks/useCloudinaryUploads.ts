@@ -25,13 +25,14 @@ export const useCloudinaryUpload = (): UseCloudinaryUploadReturn => {
       const widget = window.cloudinary.createUploadWidget(
         {
           cloudName: 'dmmntinwr', 
-          uploadPreset: 'ml_default', // Replace with your upload preset
+          uploadPreset: 'ml_default', 
           sources: ['local', 'camera'],
           multiple: false,
           maxFiles: 1,
           maxFileSize: 10000000, // 10MB
           clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
           theme: 'minimal',
+          image_metadata: true,
           styles: {
             palette: {
               window: '#0a0e27',

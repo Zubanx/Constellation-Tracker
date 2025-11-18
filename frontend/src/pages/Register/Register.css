@@ -113,26 +113,48 @@
   font-size: 1.8rem;
 }
 
-/* Form controls */
+/* Form controls - FIXED TEXT VISIBILITY */
 .register-container .form-control {
   border-radius: 10px;
   border: 2px solid #e0e0e0;
   padding: 12px 16px;
   transition: all 0.3s ease;
+  background-color: #ffffff;
+  color: #1a1f3a !important;
+  font-weight: 500;
+}
+
+.register-container .form-control::placeholder {
+  color: #999;
+  opacity: 1;
 }
 
 .register-container .form-control:focus {
   border-color: #4158D0;
   box-shadow: 0 0 0 0.2rem rgba(65, 88, 208, 0.15);
+  background-color: #ffffff;
+  color: #1a1f3a !important;
 }
 
 .register-container .form-control.is-invalid {
   border-color: #dc3545;
+  color: #1a1f3a !important;
 }
 
 .register-container .form-control.is-invalid:focus {
   border-color: #dc3545;
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+  color: #1a1f3a !important;
+}
+
+/* Autofill styling - prevent browser from changing text color */
+.register-container .form-control:-webkit-autofill,
+.register-container .form-control:-webkit-autofill:hover,
+.register-container .form-control:-webkit-autofill:focus,
+.register-container .form-control:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #1a1f3a !important;
+  color: #1a1f3a !important;
 }
 
 .register-container .form-label {
@@ -179,16 +201,20 @@
   display: block;
   font-size: 0.875rem;
   margin-top: 0.25rem;
+  color: #dc3545;
+  font-weight: 500;
 }
 
 /* Links */
 .register-container a {
   color: #4158D0;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .register-container a:hover {
   color: #C850C0;
+  text-decoration: underline;
 }
 
 /* Horizontal rule */
@@ -208,6 +234,15 @@
 
 .register-card {
   animation: cardGlow 4s ease-in-out infinite;
+}
+
+/* Text inside card should be dark and readable */
+.register-card .card-body {
+  color: #1a1f3a;
+}
+
+.register-card .text-muted {
+  color: #666 !important;
 }
 
 /* Responsive adjustments */

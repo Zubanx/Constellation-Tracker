@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = "http://localhost:3000/api";
 
 export interface Observation {
   _id: string;
@@ -8,31 +8,63 @@ export interface Observation {
     name: string;
     abbreviation: string;
     hemisphere?: string;
+    latinName?: string;
   };
-  photoUrl?: string;
+  photoUrl: string; // Required in backend
   cloudinaryPublicId?: string;
-  location: string;
+  location: string; // Simple string like "Orlando, FL"
   notes?: string;
   observationDate: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface ObservationsResponse {
+// Internal response format (what backend actually returns)
+interface BackendObservationsResponse {
   observations: Observation[];
 }
 
-export interface AddObservationResponse {
+interface BackendAddObservationResponse {
   observation: Observation;
   firstTime: boolean;
 }
 
-export interface SingleObservationResponse {
+interface BackendSingleObservationResponse {
   observation: Observation;
 }
 
-export interface DeleteObservationResponse {
+interface BackendDeleteObservationResponse {
   message: string;
+}
+
+// Public response format (consistent with constellation service)
+export interface ObservationsResponse {
+  status: string;
+  data: {
+    observations: Observation[];
+  };
+}
+
+export interface AddObservationResponse {
+  status: string;
+  data: {
+    observation: Observation;
+    firstTime: boolean;
+  };
+}
+
+export interface SingleObservationResponse {
+  status: string;
+  data: {
+    observation: Observation;
+  };
+}
+
+export interface DeleteObservationResponse {
+  status: string;
+  data: {
+    message: string;
+  };
 }
 
 export const observationService = {
@@ -44,38 +76,48 @@ export const observationService = {
     params?: {
       constellationId?: string;
       sortBy?: string;
-      order?: 'asc' | 'desc';
+      order?: "asc" | "desc";
     }
   ): Promise<ObservationsResponse> => {
     const queryParams = new URLSearchParams();
-    
+
     if (params?.constellationId) {
-      queryParams.append('constellationId', params.constellationId);
+      queryParams.append("constellationId", params.constellationId);
     }
     if (params?.sortBy) {
-      queryParams.append('sortBy', params.sortBy);
+      queryParams.append("sortBy", params.sortBy);
     }
     if (params?.order) {
-      queryParams.append('order', params.order);
+      queryParams.append("order", params.order);
     }
 
     const queryString = queryParams.toString();
-    const url = `${API_URL}/observations${queryString ? `?${queryString}` : ''}`;
+    const url = `${API_URL}/observations${
+      queryString ? `?${queryString}` : ""
+    }`;
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error || 'Failed to fetch observations');
+      throw new Error(error.error || "Failed to fetch observations");
     }
 
-    return response.json();
+    const data: BackendObservationsResponse = await response.json();
+    
+    // Transform to consistent format
+    return {
+      status: 'success',
+      data: {
+        observations: data.observations
+      }
+    };
   },
 
   /**
@@ -86,19 +128,27 @@ export const observationService = {
     id: string
   ): Promise<SingleObservationResponse> => {
     const response = await fetch(`${API_URL}/observations/${id}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error || 'Failed to fetch observation');
+      throw new Error(error.error || "Failed to fetch observation");
     }
 
-    return response.json();
+    const data: BackendSingleObservationResponse = await response.json();
+    
+    // Transform to consistent format
+    return {
+      status: 'success',
+      data: {
+        observation: data.observation
+      }
+    };
   },
 
   /**
@@ -108,28 +158,37 @@ export const observationService = {
     token: string,
     data: {
       constellationId: string;
-      photoUrl?: string;
+      photoUrl: string; 
       cloudinaryPublicId?: string;
-      location: string;
+      location: string; 
       notes?: string;
       observationDate?: string;
     }
   ): Promise<AddObservationResponse> => {
     const response = await fetch(`${API_URL}/observations`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error || 'Failed to add observation');
+      throw new Error(error.error || "Failed to add observation");
     }
 
-    return response.json();
+    const backendData: BackendAddObservationResponse = await response.json();
+    
+    // Transform to consistent format
+    return {
+      status: 'success',
+      data: {
+        observation: backendData.observation,
+        firstTime: backendData.firstTime
+      }
+    };
   },
 
   /**
@@ -140,24 +199,32 @@ export const observationService = {
     id: string,
     data: {
       notes?: string;
-      location?: string;
+      location?: string; // Simple string like "Orlando, FL"
     }
   ): Promise<SingleObservationResponse> => {
     const response = await fetch(`${API_URL}/observations/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error || 'Failed to update observation');
+      throw new Error(error.error || "Failed to update observation");
     }
 
-    return response.json();
+    const backendData: BackendSingleObservationResponse = await response.json();
+    
+    // Transform to consistent format
+    return {
+      status: 'success',
+      data: {
+        observation: backendData.observation
+      }
+    };
   },
 
   /**
@@ -168,19 +235,27 @@ export const observationService = {
     id: string
   ): Promise<DeleteObservationResponse> => {
     const response = await fetch(`${API_URL}/observations/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error || 'Failed to delete observation');
+      throw new Error(error.error || "Failed to delete observation");
     }
 
-    return response.json();
+    const backendData: BackendDeleteObservationResponse = await response.json();
+    
+    // Transform to consistent format
+    return {
+      status: 'success',
+      data: {
+        message: backendData.message
+      }
+    };
   },
 
   /**
@@ -192,8 +267,8 @@ export const observationService = {
   ): Promise<ObservationsResponse> => {
     return observationService.getAllObservations(token, {
       constellationId,
-      sortBy: 'observationDate',
-      order: 'desc',
+      sortBy: "observationDate",
+      order: "desc",
     });
   },
 
@@ -204,12 +279,15 @@ export const observationService = {
     token: string,
     limit: number = 5
   ): Promise<Observation[]> => {
-    const { observations } = await observationService.getAllObservations(token, {
-      sortBy: 'observationDate',
-      order: 'desc',
-    });
-    
-    return observations.slice(0, limit);
+    const response = await observationService.getAllObservations(
+      token,
+      {
+        sortBy: "observationDate",
+        order: "desc",
+      }
+    );
+
+    return response.data.observations.slice(0, limit);
   },
 };
 
