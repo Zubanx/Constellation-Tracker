@@ -1,3 +1,23 @@
+#gallery-div {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    min-height: 100vh;
+    color: #F4F3EE;
+}
+
+#gallery-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+#gallery-title {
+    font-size: 4rem;
+}
+
 #constellation-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
