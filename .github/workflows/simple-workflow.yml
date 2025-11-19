@@ -27,8 +27,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'npm'
+          node-version: "20.x"
+          cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
       - name: Install backend dependencies
@@ -44,7 +44,7 @@ jobs:
           echo "JWT_EXPIRES_IN=1d" >> .env.test
           echo "JWT_COOKIE_EXPIRES_IN=1" >> .env.test
           echo "FRONTEND_URL=http://localhost:5173" >> .env.test
-          echo "SENDGRID_API_KEY=test-key" >> .env.test
+          echo "SENDGRID_API_KEY=SG.test-key" >> .env.test
           echo "SENDGRID_FROM_EMAIL=test@example.com" >> .env.test
 
       - name: Wait for MongoDB
