@@ -15,7 +15,7 @@ const path = require('path');
 dotenv.config({ path: path.resolve(__dirname, '../../', '.env.test') });
 
 // Mock email functions
-jest.mock('../../utils/email', () => ({
+jest.mock('../utils/email', () => ({
   sendConfirmationEmail: jest.fn().mockResolvedValue(true),
   sendPasswordResetEmail: jest.fn().mockResolvedValue(true),
 }));
