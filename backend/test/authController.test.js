@@ -2,12 +2,12 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const app = require('../../app'); // Your Express app
-const User = require('../../models/User');
+const app = require('../app'); // Your Express app
+const User = require('../models/User');
 const {
   sendConfirmationEmail,
   sendPasswordResetEmail,
-} = require('../../utils/email');
+} = require('../utils/email');
 const dotenv = require('dotenv');
 const path = require('path');
 
