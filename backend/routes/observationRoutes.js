@@ -8,6 +8,7 @@ router.post('/', authProtect, observationController.addObservation);
 router.patch('/:id', authProtect, observationController.updateObservation);
 router.delete('/:id', authProtect, observationController.deleteObservation);
 router.get('/', authProtect, observationController.getAllObservations);
+router.get('/:constellationId', observationController.getObservationsByConstellation);
 router.get('/:id', authProtect, observationController.getObservation);
 
 module.exports = router;

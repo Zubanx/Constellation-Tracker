@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { observationService } from "../../services/observationService";
 import {
@@ -11,7 +11,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./NewObservations.css";
 
 const AddObservation: React.FC = () => {
-  const { id: preSelectedConstellationId } = useParams<{ id?: string }>();
+  
+  const location = useLocation();
+  const preSelectedConstellationId = location.state?.preSelectedConstellationId;
+  
   const { token } = useAuth();
   const navigate = useNavigate();
   const { uploadImage, isUploading: isUploadingImage } = useCloudinaryUpload();
@@ -22,9 +25,8 @@ const AddObservation: React.FC = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  // Form state
   const [formData, setFormData] = useState({
-    constellationId: preSelectedConstellationId || "",
+    constellationId: preSelectedConstellationId?.toString() || "",
     location: "",
     notes: "",
     observationDate: new Date().toISOString().split("T")[0], // Today's date
@@ -40,9 +42,10 @@ const AddObservation: React.FC = () => {
 
   useEffect(() => {
     if (preSelectedConstellationId) {
+      console.log('🔵 Pre-selected constellation ID:', preSelectedConstellationId);
       setFormData((prev) => ({
         ...prev,
-        constellationId: preSelectedConstellationId,
+        constellationId: preSelectedConstellationId.toString(),
       }));
     }
   }, [preSelectedConstellationId]);
@@ -131,13 +134,16 @@ const AddObservation: React.FC = () => {
       setIsSubmitting(true);
 
       const observationData = {
-        constellationId: formData.constellationId,
+        constellationId: parseInt(formData.constellationId, 10),
         location: formData.location.trim(),
         notes: formData.notes.trim(),
         observationDate: formData.observationDate,
         photoUrl: formData.photoUrl,
         cloudinaryPublicId: formData.cloudinaryPublicId,
       };
+
+      console.log("📤 Sending observation data:", observationData);
+      console.log("📤 ConstellationId type:", typeof observationData.constellationId);
 
       const result = await observationService.addObservation(
         token,
@@ -188,7 +194,7 @@ const AddObservation: React.FC = () => {
           <div className="col-lg-8">
             <div className="observation-form-card">
               <h1 className="form-title">
-                <span className="title-icon"></span>
+                <span className="title-icon">⭐</span>
                 Log New Observation
               </h1>
               <p className="form-subtitle">Record your celestial discovery</p>
@@ -222,7 +228,7 @@ const AddObservation: React.FC = () => {
                   >
                     <option value="">Select a constellation...</option>
                     {constellations.map((constellation) => (
-                      <option key={constellation._id} value={constellation._id}>
+                      <option key={constellation._id} value={constellation.id}>
                         {constellation.name} ({constellation.abbreviation})
                       </option>
                     ))}
@@ -359,7 +365,7 @@ const AddObservation: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <span className="me-2"></span>
+                        <span className="me-2">✨</span>
                         Log Observation
                       </>
                     )}

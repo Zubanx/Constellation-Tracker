@@ -1,8 +1,9 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Dashboard.css";
-import observationService, { Observation } from "../../services/observationService";
+import observationService from "../../services/observationService";
+import { constellationService, Constellation } from "../../services/constellationService";
 
 interface UserStats {
   totalObservations: number;
@@ -12,7 +13,7 @@ interface UserStats {
 }
 
 const getToken = (): string | null => {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 };
 
 const Dashboard: React.FC = () => {
@@ -33,7 +34,7 @@ const Dashboard: React.FC = () => {
   const fetchDashboardData = async (): Promise<void> => {
     const token = getToken();
     if (!token) {
-      setError('Authentication required');
+      setError("Authentication required");
       setIsLoading(false);
       return;
     }
@@ -41,30 +42,50 @@ const Dashboard: React.FC = () => {
     try {
       setIsLoading(true);
 
-      // Fetch recent observations (last 5)
-      const observations = await observationService.getRecentObservations(token, 5);
+      // ✅ Fetch both observations AND constellations
+      const [observations, constellationsResponse] = await Promise.all([
+        observationService.getRecentObservations(token, 100), // Get all observations for accurate stats
+        constellationService.getAllConstellations(token),
+      ]);
+
+      
+      const constellationMap: Record<number, Constellation> = {};
+      constellationsResponse.data.constellations.forEach(
+        (constellation: Constellation) => {
+          constellationMap[constellation.id] = constellation;
+        }
+      );
 
       // Calculate stats from observations
       if (observations.length > 0) {
-        // Get unique constellations
-        const uniqueConstellations = new Set(
-          observations.map(obs => obs.constellationId._id)
+        // ✅ Get unique constellation IDs (numeric)
+        const uniqueConstellationIds = new Set(
+          observations.map((obs) => obs.constellationId)
         );
 
-        // Find favorite constellation (most observed)
-        const constellationCounts: { [key: string]: { name: string; count: number } } = {};
-        observations.forEach(obs => {
-          const id = obs.constellationId._id;
-          const name = obs.constellationId.name;
-          if (constellationCounts[id]) {
-            constellationCounts[id].count++;
-          } else {
-            constellationCounts[id] = { name, count: 1 };
+        // ✅ Find favorite constellation (most observed)
+        const constellationCounts: Record<number, { name: string; count: number }> = {};
+        
+        observations.forEach((obs) => {
+          const constId = obs.constellationId as number;
+          const constellation = constellationMap[constId];
+          
+          if (constellation) {
+            if (constellationCounts[constId]) {
+              constellationCounts[constId].count++;
+            } else {
+              constellationCounts[constId] = {
+                name: constellation.name,
+                count: 1,
+              };
+            }
           }
         });
 
-        const favoriteConst = Object.values(constellationCounts).reduce((max, current) =>
-          current.count > max.count ? current : max
+        // Find constellation with highest count
+        const favoriteConst = Object.values(constellationCounts).reduce(
+          (max, current) => (current.count > max.count ? current : max),
+          { name: "None", count: 0 }
         );
 
         // Get last observation date
@@ -72,9 +93,17 @@ const Dashboard: React.FC = () => {
 
         setStats({
           totalObservations: observations.length,
-          constellationsTracked: uniqueConstellations.size,
+          constellationsTracked: uniqueConstellationIds.size,
           favoriteConstellation: favoriteConst.name,
           lastObservationDate: lastDate,
+        });
+      } else {
+        // No observations yet
+        setStats({
+          totalObservations: 0,
+          constellationsTracked: 0,
+          favoriteConstellation: "None yet",
+          lastObservationDate: "N/A",
         });
       }
 
@@ -89,6 +118,9 @@ const Dashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="dashboard-container">
+        <div className="stars"></div>
+        <div className="stars2"></div>
+        <div className="stars3"></div>
         <div className="container py-5">
           <div className="text-center">
             <div className="spinner-border text-light" role="status">
@@ -194,7 +226,9 @@ const Dashboard: React.FC = () => {
               <div className="mb-4">
                 <div className="d-flex justify-content-between mb-2">
                   <span>Constellations Discovered</span>
-                  <span>{stats.constellationsTracked}/88</span>
+                  <span>
+                    {stats.constellationsTracked}/88
+                  </span>
                 </div>
                 <div className="progress" style={{ height: "10px" }}>
                   <div
