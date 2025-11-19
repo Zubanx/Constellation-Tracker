@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const protected = require('./controllers/authController').protect;
+const authProtect = require('./controllers/authController').protect;
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
