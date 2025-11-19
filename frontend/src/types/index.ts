@@ -32,7 +32,8 @@ export interface RegisterCredentials {
 
 // Constellation types
 export interface Constellation {
-  id: string;
+  _id: string;  // MongoDB ObjectId
+  id: number;   // ✅ Constellation ID (1-88)
   name: string;
   latinName?: string;
   abbreviation?: string;
@@ -43,12 +44,28 @@ export interface Constellation {
   area?: number;
   brightestStar?: string;
   visibility?: string;
+  hemisphere?: string;
   season?: "Spring" | "Summer" | "Fall" | "Winter" | "Year-round";
   imageUrl?: string;
   createdAt?: string;
   updatedAt?: string;
 }
 
+
+export interface Observation {
+  _id: string;
+  userId: string;
+  constellationId: number;  
+  photoUrl: string;
+  cloudinaryPublicId: string;
+  location: string;
+  notes?: string;
+  observationDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Legacy type for backward compatibility (if needed)
 export interface ConstellationObservation {
   id: string;
   userId: string;
@@ -123,7 +140,6 @@ export interface AuthContextType {
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
-
 
 // Filter and sort types
 export interface ConstellationFilters {

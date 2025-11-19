@@ -1,15 +1,10 @@
 const API_URL = "http://localhost:3000/api";
 
+// ✅ UPDATED - constellationId is now a number (1-88)
 export interface Observation {
   _id: string;
   userId: string;
-  constellationId: {
-    _id: string;
-    name: string;
-    abbreviation: string;
-    hemisphere?: string;
-    latinName?: string;
-  };
+  constellationId: number;  // ✅ Changed from object to number (1-88)
   photoUrl: string; // Required in backend
   cloudinaryPublicId?: string;
   location: string; // Simple string like "Orlando, FL"
@@ -74,7 +69,7 @@ export const observationService = {
   getAllObservations: async (
     token: string,
     params?: {
-      constellationId?: string;
+      constellationId?: number;  // ✅ Changed from string to number
       sortBy?: string;
       order?: "asc" | "desc";
     }
@@ -82,7 +77,7 @@ export const observationService = {
     const queryParams = new URLSearchParams();
 
     if (params?.constellationId) {
-      queryParams.append("constellationId", params.constellationId);
+      queryParams.append("constellationId", params.constellationId.toString());  // ✅ Convert to string for URL
     }
     if (params?.sortBy) {
       queryParams.append("sortBy", params.sortBy);
@@ -157,7 +152,7 @@ export const observationService = {
   addObservation: async (
     token: string,
     data: {
-      constellationId: string;
+      constellationId: number;  // ✅ Changed from string to number
       photoUrl: string; 
       cloudinaryPublicId?: string;
       location: string; 
@@ -165,6 +160,8 @@ export const observationService = {
       observationDate?: string;
     }
   ): Promise<AddObservationResponse> => {
+    console.log('🔵 observationService sending:', data);
+    
     const response = await fetch(`${API_URL}/observations`, {
       method: "POST",
       headers: {
@@ -263,7 +260,7 @@ export const observationService = {
    */
   getObservationsByConstellation: async (
     token: string,
-    constellationId: string
+    constellationId: number  // ✅ Changed from string to number
   ): Promise<ObservationsResponse> => {
     return observationService.getAllObservations(token, {
       constellationId,

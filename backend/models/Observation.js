@@ -8,8 +8,9 @@ const observationSchema = new mongoose.Schema(
       required: true,
     },
     constellationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Constellation',
+      type: Number,
+      min: 1,
+      max: 88,
       required: true,
     },
     photoUrl: {
