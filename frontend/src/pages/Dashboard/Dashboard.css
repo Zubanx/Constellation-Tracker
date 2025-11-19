@@ -397,3 +397,7 @@
   --bs-table-striped-bg: transparent !important;
   --bs-table-hover-bg: rgba(255, 255, 255, 0.08) !important;
 }
+
+.text-muted.mb-0 {
+  color: #ffffff !important;
+}
