@@ -215,15 +215,6 @@ const Login: React.FC = () => {
                       "Sign In"
                     )}
                   </button>
-
-                  <div className="text-center">
-                    <a
-                      href="/forgot-password"
-                      className="text-decoration-none small"
-                    >
-                      Forgot password?
-                    </a>
-                  </div>
                 </form>
 
                 <hr className="my-4" />

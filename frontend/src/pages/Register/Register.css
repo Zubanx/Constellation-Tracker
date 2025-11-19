@@ -95,7 +95,15 @@
 .constellation-icon {
   display: inline-block;
   animation: float 3s ease-in-out infinite;
+  color: #ff9900;           /* default yellow */
+  transition: color 0.4s ease;  /* smooth color change on hover */
 }
+
+.register-card:hover .constellation-icon {
+  color: #302991;
+}
+
+
 
 @keyframes float {
   0%, 100% {
@@ -124,6 +132,7 @@
   font-weight: 500;
 }
 
+/*form text*/
 .register-container .form-control::placeholder {
   color: #999;
   opacity: 1;
@@ -210,6 +219,9 @@
   color: #4158D0;
   transition: color 0.3s ease;
   text-decoration: none;
+  font-family: "Archivo", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .register-container a:hover {
@@ -242,7 +254,19 @@
 }
 
 .register-card .text-muted {
-  color: #666 !important;
+  color: #08197a !important;
+  font-family: "Archivo", sans-serif;
+  font-size: 16px;
+  font-weight: 550;
+
+}
+
+
+.account-text {
+  color: #302991; /* your desired color */
+  font-family: 'Archivo', sans-serif;
+  font-weight: 600;
+  font-size: 18px; /* adjust if needed */
 }
 
 /* Responsive adjustments */

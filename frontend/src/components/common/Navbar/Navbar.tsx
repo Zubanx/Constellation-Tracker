@@ -98,13 +98,6 @@ const Navbar: React.FC = () => {
               
               {dropdownOpen && (
                 <div className="dropdown-menu" style={{ display: 'block' }}>
-                  <Link 
-                    to="/profile" 
-                    className="dropdown-item"
-                  >
-                    <span className="dropdown-icon">👤</span>
-                    Profile
-                  </Link>
                   <button 
                     className="dropdown-item logout" 
                     onClick={handleLogout}

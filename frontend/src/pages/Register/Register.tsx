@@ -142,18 +142,18 @@ const Register: React.FC = () => {
                 <div className="text-center mb-4">
                   <div className="constellation-icon mb-3">
                     <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                      <circle cx="10" cy="15" r="2" fill="#FFD700" />
-                      <circle cx="25" cy="10" r="2.5" fill="#FFD700" />
-                      <circle cx="40" cy="20" r="2" fill="#FFD700" />
-                      <circle cx="50" cy="35" r="2" fill="#FFD700" />
-                      <circle cx="35" cy="45" r="2.5" fill="#FFD700" />
-                      <circle cx="15" cy="40" r="2" fill="#FFD700" />
-                      <line x1="10" y1="15" x2="25" y2="10" stroke="#FFD700" strokeWidth="1" opacity="0.6" />
-                      <line x1="25" y1="10" x2="40" y2="20" stroke="#FFD700" strokeWidth="1" opacity="0.6" />
-                      <line x1="40" y1="20" x2="50" y2="35" stroke="#FFD700" strokeWidth="1" opacity="0.6" />
-                      <line x1="50" y1="35" x2="35" y2="45" stroke="#FFD700" strokeWidth="1" opacity="0.6" />
-                      <line x1="35" y1="45" x2="15" y2="40" stroke="#FFD700" strokeWidth="1" opacity="0.6" />
-                      <line x1="15" y1="40" x2="10" y2="15" stroke="#FFD700" strokeWidth="1" opacity="0.6" />
+                      <circle cx="10" cy="15" r="3" fill="currentColor" />
+                      <circle cx="25" cy="10" r="2.5" fill="currentColor" />
+                      <circle cx="40" cy="20" r="3" fill="currentColor" />
+                      <circle cx="50" cy="35" r="2.5" fill="currentColor" />
+                      <circle cx="35" cy="45" r="2.5" fill="currentColor" />
+                      <circle cx="15" cy="40" r="2.5" fill="currentColor" />
+                      <line x1="10" y1="15" x2="25" y2="10" stroke="currentColor" strokeWidth="1.5" opacity="1" />
+                      <line x1="25" y1="10" x2="40" y2="20" stroke="currentColor" strokeWidth="1.5" opacity="1" />
+                      <line x1="40" y1="20" x2="50" y2="35" stroke="currentColor" strokeWidth="1.5" opacity="1" />
+                      <line x1="50" y1="35" x2="35" y2="45" stroke="currentColor" strokeWidth="1.5" opacity="1" />
+                      <line x1="35" y1="45" x2="15" y2="40" stroke="currentColor" strokeWidth="1.5" opacity="1" />
+                      <line x1="15" y1="40" x2="10" y2="15" stroke="currentColor" strokeWidth="1.5" opacity="1" />
                     </svg>
                   </div>
                   <h2 className="register-title mb-2">Create Account</h2>
@@ -280,10 +280,10 @@ const Register: React.FC = () => {
 
                 <hr className="my-4" />
                 <div className="text-center">
-                  <p className="mb-0 small text-muted">
+                  <p className="mb-0 small account-text">
                     Already have an account?{" "}
                     <Link to="/login" className="text-decoration-none fw-semibold">
-                      Sign in
+                      Log in
                     </Link>
                   </p>
                 </div>
