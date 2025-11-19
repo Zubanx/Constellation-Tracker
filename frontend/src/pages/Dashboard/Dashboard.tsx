@@ -225,10 +225,8 @@ const Dashboard: React.FC = () => {
               <h3 className="section-heading mb-4">Your Progress</h3>
               <div className="mb-4">
                 <div className="d-flex justify-content-between mb-2">
-                  <span>Constellations Discovered</span>
-                  <span>
-                    {stats.constellationsTracked}/88
-                  </span>
+                  <span className="progress-label">Constellations Discovered</span>
+                  <span className="progress-value">{stats.constellationsTracked}/88</span>
                 </div>
                 <div className="progress" style={{ height: "10px" }}>
                   <div
