@@ -31,6 +31,25 @@ const Observations: React.FC = () => {
     fetchData();
   }, []);
 
+  const handleDelete = async (id: string) => {
+    const token = getToken();
+    if (!token) return;
+
+    const confirmDelete = window.confirm("Delete this observation?");
+    if (!confirmDelete) return;
+
+    try {
+      await observationService.deleteObservation(id, token);
+
+      // Remove locally
+      setObservations((prev) => prev.filter((obs) => obs._id !== id));
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("Failed to delete observation.");
+    }
+  };
+
+
   const fetchData = async (): Promise<void> => {
     const token = getToken();
     if (!token) {
@@ -283,6 +302,22 @@ const Observations: React.FC = () => {
                           <p>{observation.notes}</p>
                         </div>
                       )}
+
+                      <div className="observation-actions d-flex justify-content-between mt-3">
+                        <Link
+                          to={`/observations/edit/${observation._id}`}
+                          className="btn btn-sm btn-outline-primary"
+                        >
+                          Edit
+                        </Link>
+
+                        <button
+                          className="btn btn-sm btn-danger observation-delete-btn"
+                          onClick={() => handleDelete(observation._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
 
                     </div>
                   </div>
