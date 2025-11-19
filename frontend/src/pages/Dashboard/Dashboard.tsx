@@ -23,7 +23,6 @@ const Dashboard: React.FC = () => {
     lastObservationDate: "N/A",
   });
 
-  const [recentObservations, setRecentObservations] = useState<Observation[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
@@ -44,7 +43,6 @@ const Dashboard: React.FC = () => {
 
       // Fetch recent observations (last 5)
       const observations = await observationService.getRecentObservations(token, 5);
-      setRecentObservations(observations);
 
       // Calculate stats from observations
       if (observations.length > 0) {
@@ -184,71 +182,6 @@ const Dashboard: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Observations */}
-        <div className="row">
-          <div className="col-12">
-            <div className="recent-observations-card">
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h3 className="section-heading mb-0">Recent Observations</h3>
-                <Link
-                  to="/observations"
-                  className="btn btn-sm btn-outline-light"
-                >
-                  View All
-                </Link>
-              </div>
-
-              {recentObservations.length === 0 ? (
-                <div className="text-center py-5">
-                  <p className="text-muted">
-                    No observations yet. Start tracking constellations!
-                  </p>
-                  <Link to="/observations/new" className="btn btn-primary mt-3">
-                    Log Your First Observation
-                  </Link>
-                </div>
-              ) : (
-                <div className="table-responsive">
-                  <table className="table observation-table">
-                    <thead>
-                      <tr>
-                        <th>Constellation</th>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recentObservations.map((observation) => (
-                        <tr key={observation._id}>
-                          <td>
-                            <strong>{observation.constellationId.name}</strong>
-                            <span className="constellation-abbr ms-2">
-                              {observation.constellationId.abbreviation}
-                            </span>
-                          </td>
-                          <td>
-                            {new Date(observation.observationDate).toLocaleDateString()}
-                          </td>
-                          <td>{observation.location}</td>
-                          <td>
-                            <Link
-                              to={`/observations/${observation._id}`}
-                              className="btn btn-sm btn-outline-primary"
-                            >
-                              View
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
             </div>
           </div>
         </div>
