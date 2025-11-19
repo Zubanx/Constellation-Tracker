@@ -7,9 +7,9 @@
   color: #ffffff;
 }
 
-/* Starfield background */
+/* Starfield - FIXED */
 .home-container .stars,
-.home-container .stars2,
+.home-contahomers2,
 .home-container .stars3 {
   position: fixed;
   top: 0;
@@ -17,35 +17,50 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 0;
 }
 
+/* Layer 1 — Small bright stars */
 .home-container .stars {
-  background: transparent
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><circle cx="1" cy="1" r="1" fill="white" opacity="0.8"/></svg>')
-    repeat;
-  animation: animateStars 100s linear infinite;
+  background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 60px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 50px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: animateStars 80s linear infinite;
+  opacity: 0.9;
 }
 
+/* Layer 2 — Medium dimmer stars */
 .home-container .stars2 {
-  background: transparent
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="3" height="3"><circle cx="1.5" cy="1.5" r="1" fill="white" opacity="0.5"/></svg>')
-    repeat;
-  animation: animateStars 150s linear infinite;
+  background: radial-gradient(1px 1px at 40px 60px, white, transparent),
+    radial-gradient(1px 1px at 110px 90px, white, transparent),
+    radial-gradient(1px 1px at 170px 30px, white, transparent);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: animateStars 120s linear infinite;
+  opacity: 0.6;
 }
 
+/* Layer 3 — Large faint twinkling stars */
 .home-container .stars3 {
-  background: transparent
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="1.5" fill="white" opacity="0.3"/></svg>')
-    repeat;
-  animation: animateStars 200s linear infinite;
+  background: radial-gradient(2px 2px at 75px 125px, white, transparent),
+    radial-gradient(2px 2px at 150px 75px, white, transparent);
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: animateStars 180s linear infinite;
+  opacity: 0.4;
 }
 
+/* Smooth diagonal star movement */
 @keyframes animateStars {
   from {
-    transform: translateY(0);
+    background-position: 0 0;
   }
   to {
-    transform: translateY(-2000px);
+    background-position: 10000px 10000px;
   }
 }
 

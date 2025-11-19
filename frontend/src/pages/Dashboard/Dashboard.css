@@ -284,6 +284,9 @@
 .progress-bar {
   background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
 }
+.progress-card .text-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
 
 .btn-primary {
   background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
