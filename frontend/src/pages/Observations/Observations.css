@@ -73,9 +73,10 @@
 }
 
 .observations-subtitle {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.1rem;
-  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.87);
+  font-family: "Archivo", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 /* Filters Card */
@@ -95,6 +96,7 @@
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   text-transform: uppercase;
+  font-family: "Archivo", sans-serif;
   letter-spacing: 0.5px;
 }
 
@@ -103,6 +105,7 @@
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
+  font-family: "Archivo", sans-serif;
   transition: all 0.3s ease;
 }
 
@@ -204,6 +207,7 @@
 .star.filled {
   color: #ffd700;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  
 }
 
 /* Observation Details */
@@ -214,10 +218,13 @@
 .detail-item {
   display: flex;
   align-items: center;
+  color: #ffd050; 
+  font-family: "Archivo", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
   font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .detail-icon {

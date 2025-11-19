@@ -284,14 +284,6 @@ const Observations: React.FC = () => {
                         </div>
                       )}
 
-                      <div className="observation-actions">
-                        <Link
-                          to={`/observations/${observation._id}`}
-                          className="btn btn-sm btn-outline-primary w-100"
-                        >
-                          View Details
-                        </Link>
-                      </div>
                     </div>
                   </div>
                 </div>
