@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ConstellationDetail.css';
 import observationService, { Observation } from '../../services/observationService';
+const url = "http://localhost:3000";
+
 
 interface ConstellationDetailType {
   _id: string;
@@ -42,7 +44,6 @@ const ConstellationDetail: React.FC = () => {
 
   const fetchConstellationDetail = async (): Promise<void> => {
     try {
-      const url = "http://localhost:3000";
       const response = await fetch(`${url}/api/constellations/${id}`);
 
       if (!response.ok) {
