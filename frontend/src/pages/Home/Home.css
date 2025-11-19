@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 
-/* .home-container .stars {
+.home-container .stars {
   background: transparent
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><circle cx="1" cy="1" r="1" fill="white" opacity="0.8"/></svg>')
     repeat;
@@ -38,7 +38,7 @@
     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="1.5" fill="white" opacity="0.3"/></svg>')
     repeat;
   animation: animateStars 200s linear infinite;
-} */
+}
 
 @keyframes animateStars {
   from {
