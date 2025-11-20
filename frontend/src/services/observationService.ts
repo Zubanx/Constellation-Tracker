@@ -200,7 +200,7 @@ export const observationService = {
     }
   ): Promise<SingleObservationResponse> => {
     const response = await fetch(`${API_URL}/observations/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

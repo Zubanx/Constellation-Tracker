@@ -8,10 +8,6 @@ function Footer() {
   return (
     <footer className="footer-container">
       <div className="footer-content">
-        <p>&copy; {currentYear} My Company. All rights reserved.</p>
-        <div className="social-links">
-          <a href="#">Twitter</a> | <a href="#">LinkedIn</a>
-        </div>
       </div>
     </footer>
   );

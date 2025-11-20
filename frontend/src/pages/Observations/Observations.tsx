@@ -27,6 +27,11 @@ const Observations: React.FC = () => {
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
+  // For flip card edit
+  const [flippedCardId, setFlippedCardId] = useState<string | null>(null);
+  const [editNotes, setEditNotes] = useState("");
+  const [editLocation, setEditLocation] = useState("");
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -39,7 +44,7 @@ const Observations: React.FC = () => {
     if (!confirmDelete) return;
 
     try {
-      await observationService.deleteObservation(id, token);
+      await observationService.deleteObservation(token, id);
 
       // Remove locally
       setObservations((prev) => prev.filter((obs) => obs._id !== id));
@@ -48,7 +53,6 @@ const Observations: React.FC = () => {
       alert("Failed to delete observation.");
     }
   };
-
 
   const fetchData = async (): Promise<void> => {
     const token = getToken();
@@ -250,75 +254,150 @@ const Observations: React.FC = () => {
 
               return (
                 <div key={observation._id} className="col-md-6 col-lg-4">
-                  <div className="observation-card">
-                    {observation.photoUrl && (
-                      <div className="observation-image">
-                        <img
-                          src={observation.photoUrl}
-                          alt={constellation.name}
-                        />
-                      </div>
-                    )}
-
-                    <div className="observation-content">
-                      <div className="observation-header">
-                        <h3 className="observation-constellation">
-                          {constellation.name}
-                        </h3>
-                        <div className="observation-badge">
-                          {constellation.abbreviation}
-                        </div>
-                      </div>
-
-                      <div className="observation-details">
-                        <div className="detail-item">
-                          <span className="detail-icon">📅</span>
-                          <span>
-                            {new Date(
-                              observation.observationDate
-                            ).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </span>
-                        </div>
-
-                        <div className="detail-item">
-                          <span className="detail-icon">📍</span>
-                          <span>{observation.location}</span>
-                        </div>
-
-                        {constellation.hemisphere && (
-                          <div className="detail-item">
-                            <span className="detail-icon">🌍</span>
-                            <span>{constellation.hemisphere}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {observation.notes && (
-                        <div className="observation-notes">
-                          <p>{observation.notes}</p>
+                  <div
+                    className={`observation-card flip-card ${flippedCardId === observation._id ? "flipped" : ""
+                      }`}
+                  >
+                    {/* Front Side */}
+                    <div className="flip-card-front">
+                      {observation.photoUrl && (
+                        <div className="observation-image">
+                          <img
+                            src={observation.photoUrl}
+                            alt={constellation.name}
+                          />
                         </div>
                       )}
 
-                      <div className="observation-actions d-flex justify-content-between mt-3">
-                        <Link
-                          to={`/observations/edit/${observation._id}`}
-                          className="btn btn-sm btn-outline-primary"
-                        >
-                          Edit
-                        </Link>
+                      <div className="observation-content">
+                        <div className="observation-header">
+                          <h3 className="observation-constellation">
+                            {constellation.name}
+                          </h3>
+                          <div className="observation-badge">
+                            {constellation.abbreviation}
+                          </div>
+                        </div>
 
+                        <div className="observation-details">
+                          <div className="detail-item">
+                            <span className="detail-icon">📅</span>
+                            <span>
+                              {new Date(
+                                observation.observationDate
+                              ).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              })}
+                            </span>
+                          </div>
+
+                          <div className="detail-item">
+                            <span className="detail-icon">📍</span>
+                            <span>{observation.location}</span>
+                          </div>
+
+                          {constellation.hemisphere && (
+                            <div className="detail-item">
+                              <span className="detail-icon">🌍</span>
+                              <span>{constellation.hemisphere}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {observation.notes && (
+                          <div className="observation-notes">
+                            <p>{observation.notes}</p>
+                          </div>
+                        )}
+
+                        <div className="observation-actions d-flex justify-content-between mt-3">
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => {
+                              setFlippedCardId(observation._id);
+                              setEditNotes(observation.notes || "");
+                              setEditLocation(observation.location);
+                            }}
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            className="btn btn-sm btn-danger observation-delete-btn"
+                            onClick={() => handleDelete(observation._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Back Side (Edit Form) */}
+                    <div className="flip-card-back">
+                      <h3>Edit Observation</h3>
+
+                      <label>
+                        Location:
+                        <input
+                          type="text"
+                          className="form-control mb-3"
+                          value={editLocation}
+                          onChange={(e) => setEditLocation(e.target.value)}
+                        />
+                      </label>
+
+                      <label>
+                        Notes:
+                        <textarea
+                          className="form-control mb-3"
+                          value={editNotes}
+                          onChange={(e) => setEditNotes(e.target.value)}
+                        />
+                      </label>
+
+                      <div className="d-flex justify-content-between">
                         <button
-                          className="btn btn-sm btn-danger observation-delete-btn"
-                          onClick={() => handleDelete(observation._id)}
+                          className="btn btn-secondary"
+                          onClick={() => setFlippedCardId(null)}
                         >
-                          Delete
+                          Cancel
+                        </button>
+                        <button
+                          className="btn btn-primary"
+                          onClick={async () => {
+                            if (!flippedCardId) return;
+                            const token = getToken();
+                            if (!token) return alert("Not logged in.");
+
+                            try {
+                              const res = await observationService.updateObservation(
+                                token,
+                                flippedCardId,
+                                {
+                                  notes: editNotes,
+                                  location: editLocation,
+                                }
+                              );
+                              // Update local state
+                              setObservations((prev) =>
+                                prev.map((obs) =>
+                                  obs._id === flippedCardId
+                                    ? res.data.observation
+                                    : obs
+                                )
+                              );
+                              setFlippedCardId(null);
+                            } catch (error) {
+                              console.error(error);
+                              alert("Failed to update observation.");
+                            }
+                          }}
+                        >
+                          Save
                         </button>
                       </div>
-
                     </div>
                   </div>
                 </div>
