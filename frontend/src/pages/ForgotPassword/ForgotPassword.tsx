@@ -1,61 +1,51 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./Login.css";
+import "./ForgotPassword.css";
 import { useAuth } from "../../context/AuthContext";
 
 interface LoginFormData {
   email: string;
-  password: string;
 }
 
-const Login: React.FC = () => {
-  const { login } = useAuth();
+const ForgotPassword: React.FC = () => {
+    const [formData, setFormData] = useState<LoginFormData>({
+        email: "",
+    });
+    const [error, setError] = useState<string>("");
+    const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false);
 
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
-  });
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false);
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+        // Clear error when user starts typing
+        if (error) setError("");
+    };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // Clear error when user starts typing
-    if (error) setError("");
-  };
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+        e.preventDefault();
+        setIsFormSubmitting(true);
+        setError("");
+    
+        try {
+          // await login(formData);
+          // The context handles navigation to /dashboard on success.
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message || "Sign in failed. Please try again.");
+          } else {
+            setError("An unexpected error occurred during sign-in.");
+          }
+        } finally {
+          setIsFormSubmitting(false);
+        }
+    };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    setIsFormSubmitting(true);
-    setError("");
-
-    try {
-      await login(formData);
-      // The context handles navigation to /dashboard on success.
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || "Sign in failed. Please try again.");
-      } else {
-        setError("An unexpected error occurred during sign-in.");
-      }
-    } finally {
-      setIsFormSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="login-container">
-      <div className="stars"></div>
-      <div className="stars2"></div>
-      <div className="stars3"></div>
-
-      <div className="container">
-        <div className="row justify-content-center align-items-center min-vh-100">
+    return(
+        <div className="forgot-password-container">
+            <div className="row justify-content-center align-items-center min-vh-100">
           <div className="col-md-5 col-lg-4">
             <div className="card login-card shadow-lg">
               <div className="card-body p-5">
@@ -130,8 +120,8 @@ const Login: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <h2 className="login-title mb-2">Stargazer</h2>
-                  <p className="text-muted">Chart your celestial journey!</p>
+                  <h2 className="login-title mb-2">Forgot Password</h2>
+                  <p className="text-muted">Enter your email below to reset your password</p>
                 </div>
 
                 {error && (
@@ -167,42 +157,6 @@ const Login: React.FC = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control form-control-lg"
-                      id="password"
-                      name="password"
-                      placeholder="Enter your password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      autoComplete="current-password"
-                    />
-                  </div>
-
-                  <div className="text-center">
-                    <a href="/forgot-password" className="text-decoration-none">
-                      Forgot Password?
-                    </a>
-                  </div>
-
-                  <div className="mb-3 form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="rememberMe"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                    />
-                    <label className="form-check-label" htmlFor="rememberMe">
-                      Remember me
-                    </label>
-                  </div>
-
                   <button
                     type="submit"
                     className="btn btn-primary btn-lg w-100 mb-3"
@@ -218,7 +172,7 @@ const Login: React.FC = () => {
                         Signing in...
                       </>
                     ) : (
-                      "Sign In"
+                      "Submit"
                     )}
                   </button>
                 </form>
@@ -227,9 +181,8 @@ const Login: React.FC = () => {
 
                 <div className="text-center">
                   <p className="mb-0 small text-muted">
-                    Don't have an account?{" "}
-                    <a href="/register" className="text-decoration-none">
-                      Sign up
+                    <a href="/login" className="text-decoration-none">
+                      Back To Login
                     </a>
                   </p>
                 </div>
@@ -237,9 +190,8 @@ const Login: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
-export default Login;
+export default ForgotPassword;

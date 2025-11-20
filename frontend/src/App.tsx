@@ -15,6 +15,7 @@ import NewObservation from "./pages/NewObservations/NewObservations";
 import ConstellationDetail from "./pages/ConstellationDetail/ConstellationDetail";
 import ConfirmEmail from "./pages/ConfirmEmail/ConfirmEmail";
 import EmailSent from "./pages/EmailSent/EmailSent";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 // import Profile from "./pages/Profile/Profile";
 // import NotFound from "./pages/NotFound/NotFound";
 
@@ -48,6 +49,9 @@ const App: React.FC = () => {
             {/* Email Confirmation Routes - Public (no auth required) */}
             <Route path="/confirm-email" element={<ConfirmEmail />} />
             <Route path="/email-sent" element={<EmailSent />} />
+
+            {/* Forgot Password Route */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Protected Routes - require authentication */}
             <Route
