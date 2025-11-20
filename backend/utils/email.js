@@ -48,7 +48,7 @@ exports.sendConfirmationEmail = async (
  */
 exports.sendPasswordResetEmail = async (userEmail, firstName, resetToken) => {
   // Build reset URL using FRONTEND_URL from environment
-  const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
   const msg = {
     to: userEmail,

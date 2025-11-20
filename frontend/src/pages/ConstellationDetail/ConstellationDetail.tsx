@@ -8,7 +8,7 @@ import observationService, {
 
 interface ConstellationDetailType {
   _id: string;
-  id: number;  // ✅ Added numeric ID field
+  id: number;  
   name: string;
   latinName: string;
   abbreviation: string;
@@ -43,7 +43,7 @@ const ConstellationDetail: React.FC = () => {
     }
   }, [id]);
 
-  // ✅ Fetch observations AFTER we have constellation data
+  
   useEffect(() => {
     if (constellation) {
       fetchObservations();

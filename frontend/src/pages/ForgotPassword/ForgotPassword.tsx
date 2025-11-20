@@ -3,16 +3,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ForgotPassword.css";
 import { useAuth } from "../../context/AuthContext";
 
-interface LoginFormData {
+interface ForgotPasswordFormData {
   email: string;
 }
 
 const ForgotPassword: React.FC = () => {
-    const [formData, setFormData] = useState<LoginFormData>({
+    const [formData, setFormData] = useState<ForgotPasswordFormData>({
         email: "",
     });
     const [error, setError] = useState<string>("");
+    const [success, setSuccess] = useState<string>("");
     const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false);
+    const { forgotPassword } = useAuth(); // Assuming you have this in AuthContext
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
@@ -20,23 +22,27 @@ const ForgotPassword: React.FC = () => {
           ...prev,
           [name]: value,
         }));
-        // Clear error when user starts typing
+        // Clear messages when user starts typing
         if (error) setError("");
+        if (success) setSuccess("");
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setIsFormSubmitting(true);
         setError("");
+        setSuccess("");
     
         try {
-          // await login(formData);
-          // The context handles navigation to /dashboard on success.
+          await forgotPassword(formData.email);
+          setSuccess("Password reset link has been sent to your email. Please check your inbox.");
+          // Clear the form
+          setFormData({ email: "" });
         } catch (err: unknown) {
           if (err instanceof Error) {
-            setError(err.message || "Sign in failed. Please try again.");
+            setError(err.message || "Failed to send reset email. Please try again.");
           } else {
-            setError("An unexpected error occurred during sign-in.");
+            setError("An unexpected error occurred. Please try again.");
           }
         } finally {
           setIsFormSubmitting(false);
@@ -45,6 +51,11 @@ const ForgotPassword: React.FC = () => {
 
     return(
         <div className="forgot-password-container">
+            {/* Star effect layers */}
+            <div className="stars"></div>
+            <div className="stars2"></div>
+            <div className="stars3"></div>
+            
             <div className="row justify-content-center align-items-center min-vh-100">
           <div className="col-md-5 col-lg-4">
             <div className="card login-card shadow-lg">
@@ -139,6 +150,21 @@ const ForgotPassword: React.FC = () => {
                   </div>
                 )}
 
+                {success && (
+                  <div
+                    className="alert alert-success alert-dismissible fade show"
+                    role="alert"
+                  >
+                    {success}
+                    <button
+                      type="button"
+                      className="btn-close"
+                      onClick={() => setSuccess("")}
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label htmlFor="email" className="form-label">
@@ -169,10 +195,10 @@ const ForgotPassword: React.FC = () => {
                           role="status"
                           aria-hidden="true"
                         ></span>
-                        Signing in...
+                        Sending...
                       </>
                     ) : (
-                      "Submit"
+                      "Send Reset Link"
                     )}
                   </button>
                 </form>
@@ -181,8 +207,9 @@ const ForgotPassword: React.FC = () => {
 
                 <div className="text-center">
                   <p className="mb-0 small text-muted">
+                    Remember your password?{" "}
                     <a href="/login" className="text-decoration-none">
-                      Back To Login
+                      Back to Login
                     </a>
                   </p>
                 </div>

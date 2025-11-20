@@ -140,16 +140,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             "Registration failed. Please try again."
         );
       }
-
-      // ✅ SUCCESS - Don't navigate here, let Register component handle it
-      // The Register component will navigate to /email-sent
-      
-      // Don't show alert anymore - Register component handles the redirect
-      
     } catch (error: any) {
       console.error("Registration error:", error);
       throw new Error(
         error.message || "Registration failed. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const forgotPassword = async (email: string): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const url = "http://localhost:3000";
+
+      const response = await fetch(`${url}/api/user/forgotPassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email.toLowerCase().trim() }),
+      });
+
+      const data = await response.json();
+
+      // Check if request failed
+      if (!response.ok || data.status === "failed") {
+        throw new Error(
+          data.message ||
+            "Failed to send password reset email. Please try again."
+        );
+      }
+
+      // Success - email sent
+      return;
+    } catch (error: any) {
+      console.error("Forgot password error:", error);
+      throw new Error(
+        error.message ||
+          "Failed to send password reset email. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -178,7 +208,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // TODO: Replace with actual API call to refresh user data
       // You would need to create a /api/user/me endpoint or similar
       const url = "http://localhost:3000";
-      const response = await fetch(`${url}/api/user/me`, {
+      const response = await fetch(`${url}/api/user/forgotPassword`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -220,6 +250,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     refreshUser,
+    forgotPassword, // Added this
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

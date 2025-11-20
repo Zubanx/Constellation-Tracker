@@ -10,14 +10,13 @@ import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Constellations from "./pages/Constellations/Constellations";
-import ObservationsList from "./pages/Observations/Observations"; 
-import NewObservation from "./pages/NewObservations/NewObservations"; 
+import ObservationsList from "./pages/Observations/Observations";
+import NewObservation from "./pages/NewObservations/NewObservations";
 import ConstellationDetail from "./pages/ConstellationDetail/ConstellationDetail";
 import ConfirmEmail from "./pages/ConfirmEmail/ConfirmEmail";
 import EmailSent from "./pages/EmailSent/EmailSent";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
-// import Profile from "./pages/Profile/Profile";
-// import NotFound from "./pages/NotFound/NotFound";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 // Components
 import Navbar from "./components/common/Navbar/Navbar";
@@ -52,6 +51,7 @@ const App: React.FC = () => {
 
             {/* Forgot Password Route */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
             {/* Protected Routes - require authentication */}
             <Route

@@ -139,6 +139,7 @@ export interface AuthContextType {
   register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
 }
 
 // Filter and sort types

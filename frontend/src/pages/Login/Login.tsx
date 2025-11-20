@@ -184,12 +184,6 @@ const Login: React.FC = () => {
                     />
                   </div>
 
-                  <div className="text-center">
-                    <a href="/forgot-password" className="text-decoration-none">
-                      Forgot Password?
-                    </a>
-                  </div>
-
                   <div className="mb-3 form-check">
                     <input
                       type="checkbox"
@@ -221,6 +215,11 @@ const Login: React.FC = () => {
                       "Sign In"
                     )}
                   </button>
+                  <div className="text-center">
+                    <a href="/forgot-password" className="text-decoration-none">
+                      Forgot Password?
+                    </a>
+                  </div>
                 </form>
 
                 <hr className="my-4" />
