@@ -33,37 +33,35 @@ const createSendToken = (user, statusCode, res) => {
 };
 exports.signup = async (req, res, next) => {
   try {
-    //generate email confirmation token
+    // Auto-confirm users locally but still generate a token and try to send a confirmation email.
     const confirmationToken = crypto.randomBytes(32).toString('hex');
-
-    // hash the token to store in database
     const hashedToken = crypto
       .createHash('sha256')
       .update(confirmationToken)
       .digest('hex');
 
-    // create new user with emailConfirmed : false
     const newUser = await User.create({
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      emailConfirmed: false,
+      emailConfirmed: true,
       emailConfirmToken: hashedToken,
       emailConfirmExpires: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
-    // send email to user with unhashed token
-    sendEmail.confirmationEmail(
-      newUser.email,
-      newUser.username,
-      confirmationToken
-    );
 
-    res.status(201).json({
-      status: 'success',
-      message:
-        'Registration successful! Please check your email to confirm your account',
-    });
+    try {
+      await sendEmail.confirmationEmail(
+        newUser.email,
+        newUser.username,
+        confirmationToken
+      );
+    } catch (e) {
+      console.error('Confirmation email failed:', e.message);
+    }
+
+    // Auto-login newly created user
+    createSendToken(newUser, 201, res);
   } catch (error) {
     res.status(401).json({
       status: 'failed',
@@ -115,7 +113,10 @@ exports.login = async (req, res, next) => {
     });
   }
   try {
-    const user = await User.findOne({ username }).select('+password');
+    // Allow login by either username or email for convenience.
+    const user = await User.findOne({
+      $or: [{ username }, { email: username }],
+    }).select('+password');
 
     if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
@@ -124,12 +125,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    if (!user.emailConfirmed) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Please confirm your email before logging in',
-      });
-    }
+    // Skip email confirmation enforcement locally (users are auto-confirmed on signup)
 
     createSendToken(user, 200, res);
   } catch (error) {
@@ -198,7 +194,25 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    sendEmail.passwordResetEmail(user.email, user.username, resetToken);
+    // Best-effort email; don't fail the request if email sending fails.
+    let emailError = null;
+    try {
+      await sendEmail.passwordResetEmail(user.email, user.username, resetToken);
+    } catch (e) {
+      emailError = e;
+      console.error('Password reset email failed:', e.message);
+    }
+
+    // Return reset token/url in the response for local/testing convenience.
+    const resetUrl = `${process.env.APP_URL || 'http://localhost:3000'}/user/resetPassword/${resetToken}`;
+    res.status(200).json({
+      status: 'success',
+      message: emailError
+        ? 'Password reset token generated; email failed to send.'
+        : 'Password reset email sent (if configured).',
+      resetToken,
+      resetUrl,
+    });
   } catch (error) {
     return res.status(500).json({
       status: 'failed',

@@ -29,9 +29,9 @@ exports.confirmationEmail = async (
 };
 
 exports.passwordResetEmail = async (userEmail, firstName, resetToken) => {
-  const resetUrl = `${req.protocol}://${req.get(
-      'host'
-    )}/user/resetPassword/${resetToken}`;
+  // Build reset URL using APP_URL, since req is not available in this helper.
+  const base = process.env.APP_URL || 'http://localhost:3000';
+  const resetUrl = `${base}/user/resetPassword/${resetToken}`;
 
   const msg = {
     to: userEmail,

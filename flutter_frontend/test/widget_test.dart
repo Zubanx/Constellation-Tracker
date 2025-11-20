@@ -11,20 +11,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_frontend/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const App());
+  testWidgets('Login screen renders', (WidgetTester tester) async {
+    // Build the actual app entry point.
+    await tester.pumpWidget(const StargazerApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify the sign-in button is present on first frame.
+    expect(find.text('Sign In'), findsOneWidget);
   });
 }
